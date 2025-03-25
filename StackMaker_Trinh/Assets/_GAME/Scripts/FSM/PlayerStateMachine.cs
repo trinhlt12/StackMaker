@@ -7,20 +7,18 @@ namespace _GAME.Scripts.FSM
 
     public class PlayerStateMachine : MonoBehaviour
     {
-        [SerializeField] private IState currentState => this._stateMachine.currentState;
-        [SerializeField] private IState previousState => this._stateMachine.previousState;
-
         public PlayerBlackboard playerBB;
 
-        private StateMachine _stateMachine;
+        public StateMachine _stateMachine;
 
-        private IdleState _idleState;
-        private MoveState _moveState;
+        public IdleState _idleState;
+        public MoveState _moveState;
 
         private void Awake()
         {
             this.playerBB = GetComponent<PlayerBlackboard>();
             this._stateMachine = new StateMachine();
+
             this._idleState    = new IdleState(this._stateMachine, this);
             this._moveState    = new MoveState(this._stateMachine, this);
         }

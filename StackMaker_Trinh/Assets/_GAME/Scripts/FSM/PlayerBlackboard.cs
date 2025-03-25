@@ -9,7 +9,7 @@ namespace _GAME.Scripts.FSM
         public CharacterController playerController;
         public float moveSpeed = 5f;
 
-        public SwipeDirection currentSwipeDirection = SwipeDirection.None;
+        public SwipeDirection currentSwipeDirection => InputManager.Instance.CurrentSwipeDirection;
 
         public void ResetSwipe()
         {

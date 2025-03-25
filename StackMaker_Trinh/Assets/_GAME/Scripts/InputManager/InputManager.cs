@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    public static InputManager Instance { get; private set; }
-    public SwipeDirection CurrentSwipeDirection { get; private set; } = SwipeDirection.None;
+    public static InputManager   Instance              { get; private set; }
+    public        SwipeDirection CurrentSwipeDirection { get; private set; } = SwipeDirection.None;
 
     private PlayerInputActions _inputActions;
 
