@@ -17,6 +17,7 @@ namespace _GAME.Scripts.FSM.States
 
         public virtual void OnUpdate()
         {
+
         }
 
         public virtual void OnFixedUpdate()

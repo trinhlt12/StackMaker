@@ -8,12 +8,13 @@ namespace _GAME.Scripts.FSM.States
         public override void OnEnter()
         {
             base.OnEnter();
+            InputManager.Instance.SetCanAcceptInput(true);
         }
 
         public override void OnUpdate()
         {
             base.OnUpdate();
-            if(this._playerStateMachine.playerBB.currentSwipeDirection != SwipeDirection.None)
+            if(this._playerStateMachine.playerBB.currentSwipeDirection != SwipeDirection.None && this._playerStateMachine.playerBB.canMove)
             {
                 this._stateMachine.ChangeState(this._playerStateMachine._moveState);
                 return;
