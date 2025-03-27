@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,12 +7,20 @@ public class LevelBuilderTool : EditorWindow
     private enum BlockType
     {
         None,
-        Ground
+        Ground,
+        Brick,
+        Obstacle,
+        Base
     }
 
-    private GameObject groundBlockPrefab;
-    private Vector3? lastPlacedPosition = null;
     private BlockType currentBlockType = BlockType.None;
+
+    private GameObject groundBlockPrefab;
+    private GameObject brickBlockPrefab;
+    private GameObject obstacleBlockPrefab;
+    private GameObject baseBlockPrefab;
+
+    private Vector3? lastPlacedPosition = null;
 
     [MenuItem("Tools/Level Builder")]
     public static void ShowWindow()
@@ -31,19 +40,16 @@ public class LevelBuilderTool : EditorWindow
 
     private void OnGUI()
     {
-        GUILayout.Label("Level Builder Tool", EditorStyles.boldLabel);
+        GUILayout.Label("🛠️ Level Builder Tool", EditorStyles.boldLabel);
 
         currentBlockType = (BlockType)EditorGUILayout.EnumPopup("Block Type", currentBlockType);
 
         GUILayout.Space(10);
-        GUILayout.Label("Ground Layer Block", EditorStyles.boldLabel);
-
-        groundBlockPrefab = (GameObject)EditorGUILayout.ObjectField(
-            "Ground Prefab",
-            groundBlockPrefab,
-            typeof(GameObject),
-            false
-        );
+        GUILayout.Label("🔧 Block Prefabs", EditorStyles.boldLabel);
+        groundBlockPrefab    = (GameObject)EditorGUILayout.ObjectField("Ground Prefab", groundBlockPrefab, typeof(GameObject), false);
+        brickBlockPrefab     = (GameObject)EditorGUILayout.ObjectField("Brick Prefab", brickBlockPrefab, typeof(GameObject), false);
+        obstacleBlockPrefab  = (GameObject)EditorGUILayout.ObjectField("Obstacle Prefab", obstacleBlockPrefab, typeof(GameObject), false);
+        this.baseBlockPrefab = (GameObject)EditorGUILayout.ObjectField("Base Prefab", this.baseBlockPrefab, typeof(GameObject), false);
     }
 
     private void OnSceneGUI(SceneView sceneView)
@@ -76,8 +82,18 @@ public class LevelBuilderTool : EditorWindow
             Vector3 point = hit.point;
             Vector3 gridPos = new Vector3(
                 Mathf.Floor(point.x) + 0.5f,
-                0f,
+                GetBlockYByType(currentBlockType),
                 Mathf.Floor(point.z) + 0.5f);
+
+            float blockHeight = GetBlockHeight(prefabToPlace);
+
+            int safety = 100;
+            while (Physics.CheckBox(gridPos, Vector3.one * 0.45f) && safety-- > 0)
+            {
+                gridPos.y += blockHeight;
+            }
+
+
 
             if (lastPlacedPosition == null || Vector3.Distance(gridPos, lastPlacedPosition.Value) > 0.01f)
             {
@@ -93,40 +109,55 @@ public class LevelBuilderTool : EditorWindow
         }
     }
 
+    private float GetBlockHeight(GameObject prefab)
+    {
+        if (prefab.TryGetComponent<Collider>(out var collider))
+        {
+            return collider.bounds.size.y;
+        }
+
+        return 1f;
+    }
+
+
     private GameObject GetPrefabForCurrentBlockType()
     {
-        switch (currentBlockType)
+        return currentBlockType switch
         {
-            case BlockType.Ground:
-                return groundBlockPrefab;
-            default:
-                return null;
-        }
+            BlockType.Ground   => groundBlockPrefab,
+            BlockType.Brick    => brickBlockPrefab,
+            BlockType.Obstacle => obstacleBlockPrefab,
+            BlockType.Base     => this.baseBlockPrefab,
+            _                  => null
+        };
+    }
+
+    private float GetBlockYByType(BlockType type)
+    {
+        return type switch
+        {
+            BlockType.Ground => 0f,
+            BlockType.Brick => 0.5f,
+            BlockType.Obstacle => 0.5f,
+            BlockType.Base => 0.5f,
+            _ => 0f
+        };
     }
 
     private void ApplySettingsForBlockType(GameObject block)
     {
-        switch (currentBlockType)
+        string parentName = currentBlockType.ToString(); // Ground, Brick, etc.
+        string layerName = parentName;
+
+        var root = GameObject.Find(parentName);
+        if (root == null)
         {
-            case BlockType.Ground:
-                ApplyGroundSettings(block);
-                break;
-        }
-    }
-
-    private static void ApplyGroundSettings(GameObject block)
-    {
-        SetLayerRecursively(block, LayerMask.NameToLayer("Ground"));
-
-
-        var groundRoot = GameObject.Find("Ground");
-        if (groundRoot == null)
-        {
-            groundRoot = new GameObject("Ground");
-            Undo.RegisterCreatedObjectUndo(groundRoot, "Create Ground Root");
+            root = new GameObject(parentName);
+            Undo.RegisterCreatedObjectUndo(root, "Create Root Group");
         }
 
-        block.transform.SetParent(groundRoot.transform);
+        block.transform.SetParent(root.transform);
+        SetLayerRecursively(block, LayerMask.NameToLayer(layerName));
     }
 
     private static void SetLayerRecursively(GameObject obj, int layer)
@@ -138,7 +169,6 @@ public class LevelBuilderTool : EditorWindow
         }
     }
 
-
     private void TryEraseBlockAtMousePosition(Event e)
     {
         Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
@@ -147,7 +177,7 @@ public class LevelBuilderTool : EditorWindow
             Vector3 point = hit.point;
             Vector3 gridPos = new Vector3(
                 Mathf.Floor(point.x) + 0.5f,
-                0f,
+                Mathf.Floor(point.y) + 0.5f,
                 Mathf.Floor(point.z) + 0.5f);
 
             Collider[] colliders = Physics.OverlapBox(gridPos, Vector3.one * 0.45f);
