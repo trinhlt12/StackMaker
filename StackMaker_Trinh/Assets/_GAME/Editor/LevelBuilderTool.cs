@@ -134,13 +134,13 @@ public class LevelBuilderTool : EditorWindow
 
     private float GetBlockHalfHeight(GameObject prefab)
     {
-        BoxCollider collider = prefab.GetComponentInChildren<BoxCollider>();
+        var collider = prefab.GetComponentInChildren<BoxCollider>();
         if (collider != null)
         {
             return (collider.size.y * prefab.transform.localScale.y) / 2f;
         }
 
-        Renderer renderer = prefab.GetComponentInChildren<Renderer>();
+        var renderer = prefab.GetComponentInChildren<Renderer>();
         if (renderer != null)
         {
             return renderer.bounds.size.y / 2f;
@@ -175,7 +175,8 @@ public class LevelBuilderTool : EditorWindow
         }
 
         block.transform.SetParent(root.transform);
-        SetLayerRecursively(block, LayerMask.NameToLayer(layerName));
+        /*SetLayerRecursively(block, LayerMask.NameToLayer(layerName));
+        SetTagRecursively(block, layerName);*/
     }
 
     private static void SetLayerRecursively(GameObject obj, int layer)
@@ -184,6 +185,15 @@ public class LevelBuilderTool : EditorWindow
         foreach (Transform child in obj.transform)
         {
             SetLayerRecursively(child.gameObject, layer);
+        }
+    }
+
+    private static void SetTagRecursively(GameObject obj, string tag)
+    {
+        obj.tag = tag;
+        foreach (Transform child in obj.transform)
+        {
+            SetTagRecursively(child.gameObject, tag);
         }
     }
 
