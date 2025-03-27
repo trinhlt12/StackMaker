@@ -31,12 +31,6 @@ namespace _GAME.Scripts
 
         public void PickUpBrick(BrickBlock brick)
         {
-            /*var newBrick = this.brickVisualPool.Get();
-            newBrick.transform.SetParent(this.playerBB.brickStackRoot);
-            newBrick.transform.localPosition = Vector3.up * this.BrickHeight;
-            newBrick.transform.localRotation = Quaternion.identity;
-            this.brickStack.Push(newBrick);*/
-
             this.brickHeight = brick.BrickHeight;
 
             this.brickStack.Push(brick.gameObject);
@@ -47,8 +41,7 @@ namespace _GAME.Scripts
 
             var cube = brick.transform.GetChild(0).gameObject;
             var yOffset = this.brickHeight * this.brickStack.Count;
-            cube.transform.localPosition = new Vector3(0, yOffset, 0);
-            Debug.Log(yOffset);
+            cube.transform.localPosition = new Vector3(0, yOffset - this.brickHeight/2, 0);
             Debug.Log(cube.transform.localPosition);
             this.UpdatePlayerVisualHeight(brick);
 
@@ -61,6 +54,7 @@ namespace _GAME.Scripts
 
         private void ClearBricks()
         {
+
 
         }
 

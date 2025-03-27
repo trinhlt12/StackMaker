@@ -44,7 +44,7 @@ namespace _GAME.Scripts.FSM.States
 
 
             var   currentPos       = this._playerStateMachine.transform.position;
-            float distanceToTarget = Vector3.Distance(currentPos, _targetPosition);
+            var distanceToTarget = Vector3.Distance(currentPos, _targetPosition);
 
             if (distanceToTarget < 0.05f)
             {
