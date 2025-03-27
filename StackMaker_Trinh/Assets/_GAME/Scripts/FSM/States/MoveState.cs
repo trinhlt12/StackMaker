@@ -1,5 +1,6 @@
 namespace _GAME.Scripts.FSM.States
 {
+    using DG.Tweening;
     using UnityEngine;
 
     public class MoveState : BaseState
@@ -65,13 +66,14 @@ namespace _GAME.Scripts.FSM.States
         {
             if (!this._playerStateMachine.playerBB.canMove)
                 return;
-            var controller = this._playerStateMachine.playerBB.playerController;
-            var playerPosition = this._playerStateMachine.transform.position;
-            var moveSpeed = this._playerStateMachine.playerBB.moveSpeed;
-            var direction = (target - playerPosition).normalized;
-            Debug.Log(direction);
 
-            controller.Move(direction * (moveSpeed * Time.deltaTime));
+            var moveSpeed = this._playerStateMachine.playerBB.moveSpeed;
+            var duration  = Vector3.Distance(this._playerStateMachine.transform.position, target) / moveSpeed;
+
+            this._playerStateMachine.transform.DOMove(target, duration).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                this._stateMachine.ChangeState(this._playerStateMachine._idleState);
+            });
         }
 
         private Vector3 FindTargetPosition()

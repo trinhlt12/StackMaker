@@ -7,7 +7,7 @@ namespace _GAME.Scripts
 
     public class Player : MonoBehaviour
     {
-        [SerializeField] PlayerBlackboard playerBB;
+        [SerializeField] private PlayerBlackboard playerBB;
 
         private readonly Stack<GameObject> brickStack = new Stack<GameObject>();
         private          float             brickHeight;
@@ -38,7 +38,9 @@ namespace _GAME.Scripts
             this.brickStack.Push(newBrick);*/
             brick.transform.SetParent(this.playerBB.brickStackRoot);
 
+            /*
             this.UpdatePlayerVisualHeight();
+            */
 
         }
 
