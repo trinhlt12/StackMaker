@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -46,10 +45,10 @@ public class LevelBuilderTool : EditorWindow
 
         GUILayout.Space(10);
         GUILayout.Label("🔧 Block Prefabs", EditorStyles.boldLabel);
-        groundBlockPrefab    = (GameObject)EditorGUILayout.ObjectField("Ground Prefab", groundBlockPrefab, typeof(GameObject), false);
-        brickBlockPrefab     = (GameObject)EditorGUILayout.ObjectField("Brick Prefab", brickBlockPrefab, typeof(GameObject), false);
-        obstacleBlockPrefab  = (GameObject)EditorGUILayout.ObjectField("Obstacle Prefab", obstacleBlockPrefab, typeof(GameObject), false);
-        this.baseBlockPrefab = (GameObject)EditorGUILayout.ObjectField("Base Prefab", this.baseBlockPrefab, typeof(GameObject), false);
+        groundBlockPrefab = (GameObject)EditorGUILayout.ObjectField("Ground Prefab", groundBlockPrefab, typeof(GameObject), false);
+        brickBlockPrefab = (GameObject)EditorGUILayout.ObjectField("Brick Prefab", brickBlockPrefab, typeof(GameObject), false);
+        obstacleBlockPrefab = (GameObject)EditorGUILayout.ObjectField("Obstacle Prefab", obstacleBlockPrefab, typeof(GameObject), false);
+        baseBlockPrefab = (GameObject)EditorGUILayout.ObjectField("Base Prefab", baseBlockPrefab, typeof(GameObject), false);
     }
 
     private void OnSceneGUI(SceneView sceneView)
@@ -76,47 +75,78 @@ public class LevelBuilderTool : EditorWindow
         GameObject prefabToPlace = GetPrefabForCurrentBlockType();
         if (prefabToPlace == null) return;
 
-        Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
+        Ray     ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
+        Vector3 gridPos;
+        float   blockHalfHeight = this.GetBlockHalfHeight(prefabToPlace);
+        Vector3 prefabExtents   = GetBlockExtents(prefabToPlace);
+
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            Vector3 point = hit.point;
-            Vector3 gridPos = new Vector3(
+            gridPos = new Vector3(
+                Mathf.Floor(hit.point.x) + 0.5f,
+                hit.collider.bounds.max.y + blockHalfHeight,
+                Mathf.Floor(hit.point.z) + 0.5f);
+        }
+        else
+        {
+            Vector3 point = ray.origin + ray.direction * 10f;
+            gridPos = new Vector3(
                 Mathf.Floor(point.x) + 0.5f,
-                GetBlockYByType(currentBlockType),
+                blockHalfHeight,
                 Mathf.Floor(point.z) + 0.5f);
+        }
 
-            float blockHeight = GetBlockHeight(prefabToPlace);
+        int safety = 100;
+        while (Physics.CheckBox(gridPos, prefabExtents) && safety-- > 0)
+        {
+            gridPos.y += blockHalfHeight;
+        }
 
-            int safety = 100;
-            while (Physics.CheckBox(gridPos, Vector3.one * 0.45f) && safety-- > 0)
-            {
-                gridPos.y += blockHeight;
-            }
+        if (lastPlacedPosition == null || Vector3.Distance(gridPos, lastPlacedPosition.Value) > 0.01f)
+        {
+            GameObject newBlock = (GameObject)PrefabUtility.InstantiatePrefab(prefabToPlace);
+            newBlock.transform.position = gridPos;
+            Undo.RegisterCreatedObjectUndo(newBlock, "Place Block");
 
+            ApplySettingsForBlockType(newBlock);
 
-
-            if (lastPlacedPosition == null || Vector3.Distance(gridPos, lastPlacedPosition.Value) > 0.01f)
-            {
-                GameObject newBlock = (GameObject)PrefabUtility.InstantiatePrefab(prefabToPlace);
-                newBlock.transform.position = gridPos;
-                Undo.RegisterCreatedObjectUndo(newBlock, "Place Block");
-
-                ApplySettingsForBlockType(newBlock);
-
-                lastPlacedPosition = gridPos;
-                e.Use();
-            }
+            lastPlacedPosition = gridPos;
+            e.Use();
         }
     }
 
-    private float GetBlockHeight(GameObject prefab)
+    private Vector3 GetBlockExtents(GameObject prefab)
     {
-        if (prefab.TryGetComponent<Collider>(out var collider))
+        Collider collider = prefab.GetComponentInChildren<Collider>();
+        if (collider != null)
         {
-            return collider.bounds.size.y;
+            return collider.bounds.extents;
         }
 
-        return 1f;
+        Renderer renderer = prefab.GetComponentInChildren<Renderer>();
+        if (renderer != null)
+        {
+            return renderer.bounds.extents;
+        }
+
+        return Vector3.one * 0.5f;
+    }
+
+    private float GetBlockHalfHeight(GameObject prefab)
+    {
+        BoxCollider collider = prefab.GetComponentInChildren<BoxCollider>();
+        if (collider != null)
+        {
+            return (collider.size.y * prefab.transform.localScale.y) / 2f;
+        }
+
+        Renderer renderer = prefab.GetComponentInChildren<Renderer>();
+        if (renderer != null)
+        {
+            return renderer.bounds.size.y / 2f;
+        }
+
+        return 0.5f;
     }
 
 
@@ -124,23 +154,11 @@ public class LevelBuilderTool : EditorWindow
     {
         return currentBlockType switch
         {
-            BlockType.Ground   => groundBlockPrefab,
-            BlockType.Brick    => brickBlockPrefab,
+            BlockType.Ground => groundBlockPrefab,
+            BlockType.Brick => brickBlockPrefab,
             BlockType.Obstacle => obstacleBlockPrefab,
-            BlockType.Base     => this.baseBlockPrefab,
-            _                  => null
-        };
-    }
-
-    private float GetBlockYByType(BlockType type)
-    {
-        return type switch
-        {
-            BlockType.Ground => 0f,
-            BlockType.Brick => 0.5f,
-            BlockType.Obstacle => 0.5f,
-            BlockType.Base => 0.5f,
-            _ => 0f
+            BlockType.Base => baseBlockPrefab,
+            _ => null
         };
     }
 
