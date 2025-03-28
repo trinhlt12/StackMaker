@@ -1,6 +1,7 @@
 namespace _GAME.Scripts.GameManager
 {
     using System;
+    using _GAME.Scripts.UI;
     using UnityEngine;
 
     public enum GameState
@@ -38,6 +39,7 @@ namespace _GAME.Scripts.GameManager
                 case GameState.Win:
                     Debug.Log("WIN");
                     GameEvent.OnPlayerWin?.Invoke();
+                    UIManager.Instance.ShowWinPanel();
                     break;
                 case GameState.Lose:
                     break;
