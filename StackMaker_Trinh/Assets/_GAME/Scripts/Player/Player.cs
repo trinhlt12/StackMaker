@@ -41,7 +41,6 @@ namespace _GAME.Scripts
             var cube = brick.transform.GetChild(0).gameObject;
             var yOffset = this.brickHeight * this.brickStack.Count;
             cube.transform.localPosition = new Vector3(0, yOffset - this.brickHeight/2, 0);
-            Debug.Log(cube.transform.localPosition);
             this.UpdatePlayerVisualHeight(brick);
 
         }

@@ -9,6 +9,7 @@ namespace _GAME.Scripts.FSM.States
         private const int     _stepSize = 1;
         private Vector3 _targetPosition;
         private Vector3 _moveDirection;
+        private bool _isMoving = false;
         public MoveState(StateMachine stateMachine, PlayerStateMachine playerStateMachine) :
             base(stateMachine, playerStateMachine) { }
 
@@ -17,8 +18,6 @@ namespace _GAME.Scripts.FSM.States
             base.OnEnter();
 
             var swipe = this._playerStateMachine.playerBB.currentSwipeDirection;
-
-            InputManager.Instance.SetCanAcceptInput(false);
 
             _moveDirection = swipe switch
             {
@@ -42,36 +41,22 @@ namespace _GAME.Scripts.FSM.States
             base.OnUpdate();
             InputManager.Instance.SetCanAcceptInput(false);
 
-
-            var   currentPos       = this._playerStateMachine.transform.position;
-            var distanceToTarget = Vector3.Distance(currentPos, _targetPosition);
-
-            if (distanceToTarget < 0.05f)
-            {
-                this._playerStateMachine.playerBB.canMove = false;
-                this._stateMachine.ChangeState(this._playerStateMachine._idleState);
-                return;
-            }
-
             MoveTowardToTarget(_targetPosition);
-
-            if (this._playerStateMachine.playerBB.playerController.velocity.magnitude < 0.1f)
-            {
-                this._stateMachine.ChangeState(this._playerStateMachine._idleState);
-            }
 
         }
 
         private void MoveTowardToTarget(Vector3 target)
         {
-            if (!this._playerStateMachine.playerBB.canMove)
-                return;
+            if (_isMoving) return;
+
+            _isMoving = true;
 
             var moveSpeed = this._playerStateMachine.playerBB.moveSpeed;
             var duration  = Vector3.Distance(this._playerStateMachine.transform.position, target) / moveSpeed;
 
             this._playerStateMachine.transform.DOMove(target, duration).SetEase(Ease.Linear).OnComplete(() =>
             {
+                _isMoving = false;
                 this._stateMachine.ChangeState(this._playerStateMachine._idleState);
             });
         }

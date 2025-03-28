@@ -12,7 +12,6 @@ namespace _GAME.Scripts.BrickManager
                 var player = other.gameObject.GetComponent<Player>();
                 player.RemoveBrick();
             }
-
         }
     }
 }

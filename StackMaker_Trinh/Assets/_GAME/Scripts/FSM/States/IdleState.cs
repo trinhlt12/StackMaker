@@ -14,7 +14,7 @@ namespace _GAME.Scripts.FSM.States
         public override void OnUpdate()
         {
             base.OnUpdate();
-            if(this._playerStateMachine.playerBB.currentSwipeDirection != SwipeDirection.None && this._playerStateMachine.playerBB.canMove)
+            if(this._playerStateMachine.playerBB.currentSwipeDirection != SwipeDirection.None)
             {
                 this._stateMachine.ChangeState(this._playerStateMachine._moveState);
                 return;

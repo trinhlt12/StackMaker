@@ -9,7 +9,6 @@ namespace _GAME.Scripts.FSM
         public Transform           playerVisual;
         public Transform           brickStackRoot;
         public GameObject          brickVisualPrefab;
-        public CharacterController playerController;
         public float               moveSpeed = 5f;
         public LayerMask           groundLayer;
         public bool                canMove = true;
