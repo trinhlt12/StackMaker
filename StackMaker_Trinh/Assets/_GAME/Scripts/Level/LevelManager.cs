@@ -6,9 +6,9 @@ namespace _GAME.Scripts.Level
 
     public class LevelManager : MonoBehaviour
     {
-        [SerializeField] private Player              player;
-        [SerializeField] private BrickSpawnerManager brickSpawnerManager;
-        private                  LevelManager        Instance { get; set; }
+        [SerializeField]                                               private Player       player;
+        [FormerlySerializedAs("brickSpawnerManager")] [SerializeField] private BlockManager blockManager;
+        private                                                                LevelManager Instance { get; set; }
 
         private void Awake()
         {

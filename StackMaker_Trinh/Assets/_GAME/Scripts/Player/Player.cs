@@ -41,20 +41,47 @@ namespace _GAME.Scripts
             var cube = brick.transform.GetChild(0).gameObject;
             var yOffset = this.brickHeight * this.brickStack.Count;
             cube.transform.localPosition = new Vector3(0, yOffset - this.brickHeight/2, 0);
-            this.UpdatePlayerVisualHeight(brick);
+            this.UpdatePlayerVisualHeight();
 
         }
 
-        public void RemoveBrick()
+        public void RemoveBrick(GameObject bridgeBlock)
         {
             //if stack is empty, return
             if (this.brickStack.Count == 0)
             {
                 return;
             }
-            brickStack.Pop();
-            Debug.Log(brickStack.Count);
 
+            var topBrick = this.brickStack.Pop();
+
+            PlaceBrick(topBrick, bridgeBlock);
+
+            UpdatePlayerVisualHeight();
+
+
+            Debug.Log(brickStack.Count);
+            Debug.Log(bridgeBlock.transform.position);
+        }
+
+        private void PlaceBrick(GameObject topBrick, GameObject bridgeBlock)
+        {
+            var brick = topBrick.GetComponent<BrickBlock>();
+
+            brick.transform.SetParent(null);
+
+            var bridgeBlockHeight = bridgeBlock.GetComponent<BoxCollider>().bounds.size.y;
+            var spawnPos = bridgeBlock.transform.position + Vector3.up * bridgeBlockHeight/2;
+
+            topBrick.gameObject.transform.position = spawnPos;
+            brick.transform.GetChild(0).transform.localPosition = Vector3.zero;
+
+            //stop collision after placing the brick:
+            var brickCollider = topBrick.GetComponent<BoxCollider>();
+            if (brickCollider != null)
+            {
+                brickCollider.enabled = false;
+            }
         }
 
         private void ClearBricks()
@@ -63,10 +90,10 @@ namespace _GAME.Scripts
 
         }
 
-        private void UpdatePlayerVisualHeight(BrickBlock brick)
+        private void UpdatePlayerVisualHeight()
         {
             this.playerBB.playerVisual.localPosition
-                = Vector3.up * (this.brickStack.Count * brick.BrickHeight);
+                = Vector3.up * (this.brickStack.Count * this.brickHeight);
 
         }
     }

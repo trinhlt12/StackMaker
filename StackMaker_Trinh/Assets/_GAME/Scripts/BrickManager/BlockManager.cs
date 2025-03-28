@@ -1,12 +1,13 @@
+using System.Net.NetworkInformation;
 using UnityEngine;
 
-public class BrickSpawnerManager : MonoBehaviour
+public class BlockManager : MonoBehaviour
 {
     [SerializeField] private GameObject brickPrefab;
     [SerializeField] private float      offsetY         = 1f;
     [SerializeField] private int        initialPoolSize = 50;
 
-    public static BrickSpawnerManager Instance              { get; private set; }
+    public static BlockManager Instance              { get; private set; }
     public        int                 TotalBrickCount       { get; private set; }
     public        Vector3?            FirstBrickPosition    { get; private set; }
 
@@ -66,7 +67,7 @@ public class BrickSpawnerManager : MonoBehaviour
 
             this.TotalBrickCount++;
         }
-        Debug.Log($"[BrickSpawnerManager] Total bricks spawned: {TotalBrickCount}");
+        Debug.Log($"[BlockManager] Total bricks spawned: {TotalBrickCount}");
     }
 
     private static float GetColliderHeight(GameObject obj)
@@ -119,5 +120,19 @@ public class BrickSpawnerManager : MonoBehaviour
         }
 
         return groundBlockCount;
+    }
+
+    private static int CountBridgeBlocks()
+    {
+        var bridgeBlockCount = 0;
+        var bridgeObjects    = GameObject.FindGameObjectsWithTag("Bridge");
+
+        foreach (var bridge in bridgeObjects)
+        {
+
+            bridgeBlockCount++;
+
+        }
+        return bridgeBlockCount;
     }
 }
