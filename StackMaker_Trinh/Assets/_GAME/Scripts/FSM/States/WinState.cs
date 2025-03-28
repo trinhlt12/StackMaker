@@ -18,13 +18,14 @@ namespace _GAME.Scripts.FSM.States
         public override void OnUpdate()
         {
             base.OnUpdate();
+            /*
             GameEvent.OnInputPermissionChanged(false);
+        */
         }
 
         public override void OnExit()
         {
             base.OnExit();
-            GameEvent.OnInputPermissionChanged(true);
         }
     }
 }

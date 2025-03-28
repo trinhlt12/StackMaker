@@ -19,7 +19,6 @@ namespace _GAME.Scripts.Level
                 return;
             }
             Instance = this;
-            DontDestroyOnLoad(this);
 
             InitLevel();
 

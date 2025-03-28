@@ -27,7 +27,6 @@ public class BlockManager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(this);
 
         this.brickObjectPool = new ObjectPool(brickPrefab, initialPoolSize);
         this.SpawnBricks();

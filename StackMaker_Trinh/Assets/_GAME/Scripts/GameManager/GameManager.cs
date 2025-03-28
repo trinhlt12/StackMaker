@@ -25,7 +25,6 @@ namespace _GAME.Scripts.GameManager
                 return;
             }
             Instance = this;
-            DontDestroyOnLoad(this);
         }
 
         public void SetGameState(GameState newState)
