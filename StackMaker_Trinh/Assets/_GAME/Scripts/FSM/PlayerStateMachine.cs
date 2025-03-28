@@ -37,5 +37,15 @@ namespace _GAME.Scripts.FSM
         {
             this._stateMachine.StateFixedUpdate();
         }
+
+        public void UpdateMoveStateTarget(Vector3 newTargetPosition)
+        {
+            if (_stateMachine.currentState is MoveState moveState)
+            {
+                var offset = this.playerBB.GetComponent<CapsuleCollider>().bounds.size.y / 2;
+                moveState.UpdateTargetPosition(newTargetPosition + Vector3.up * offset);
+            }
+        }
+
     }
 }

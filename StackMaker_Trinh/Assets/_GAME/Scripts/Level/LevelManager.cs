@@ -1,6 +1,7 @@
 namespace _GAME.Scripts.Level
 {
     using System;
+    using _GAME.Scripts.BrickManager;
     using UnityEngine;
     using UnityEngine.Serialization;
 
@@ -20,17 +21,20 @@ namespace _GAME.Scripts.Level
             Instance = this;
             DontDestroyOnLoad(this);
 
+            InitLevel();
+
             PlacePlayer();
         }
 
         private void Start()
         {
-            this.InitLevel();
         }
 
         public void InitLevel()
         {
+            BridgeManager.Instance.SortBridgeBlocks();
         }
+
 
         public void PlacePlayer()
         {

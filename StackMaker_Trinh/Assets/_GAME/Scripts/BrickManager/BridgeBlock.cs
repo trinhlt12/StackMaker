@@ -31,9 +31,10 @@ namespace _GAME.Scripts.BrickManager
                 {
                     int currentIndex = BridgeManager.Instance.GetPlayerIndexOnBridge(player.transform.position);
                     Debug.Log(currentIndex);
+                    var newTarget = BridgeManager.Instance.GetBridgeBlockAtIndex(currentIndex);
                     if(currentIndex >=0)
                     {
-                        BridgeManager.Instance.LockRemainingBridgeBlocks(currentIndex);
+                        BridgeManager.Instance.HandlePlayerOutOfBricks(newTarget);
                     }
                     return;
                 }
