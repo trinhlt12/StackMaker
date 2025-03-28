@@ -7,5 +7,6 @@ namespace _GAME.Scripts.GameManager
     {
         public static Action OnPlayerOutOfBricks;
         public static Action<bool> OnInputPermissionChanged;
+        public static Action OnPlayerWin;
     }
 }

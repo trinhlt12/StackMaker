@@ -1,5 +1,7 @@
 namespace _GAME.Scripts.FSM.States
 {
+    using _GAME.Scripts.GameManager;
+
     public abstract class BaseState : IState
     {
         protected readonly PlayerStateMachine _playerStateMachine;
@@ -27,5 +29,7 @@ namespace _GAME.Scripts.FSM.States
         public virtual void OnExit()
         {
         }
+
+
     }
 }

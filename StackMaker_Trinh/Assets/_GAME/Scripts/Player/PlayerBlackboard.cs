@@ -6,6 +6,8 @@ namespace _GAME.Scripts.FSM
 
     public class PlayerBlackboard : MonoBehaviour
     {
+        public Player player;
+        public PlayerStateMachine playerStateMachine;
         public Transform playerVisual;
         public Transform brickStackRoot;
         public float     moveSpeed = 5f;

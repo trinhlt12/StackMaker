@@ -35,4 +35,12 @@ public class ObjectPool
         obj.SetActive(false);
         pool.Enqueue(obj);
     }
+
+    public void ReturnAll()
+    {
+        foreach (var obj in pool)
+        {
+            obj.SetActive(false);
+        }
+    }
 }

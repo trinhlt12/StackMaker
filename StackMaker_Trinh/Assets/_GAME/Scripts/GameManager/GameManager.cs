@@ -36,11 +36,12 @@ namespace _GAME.Scripts.GameManager
             switch (newState)
             {
                 case GameState.Win:
+                    Debug.Log("WIN");
+                    GameEvent.OnPlayerWin?.Invoke();
                     break;
                 case GameState.Lose:
                     break;
             }
-
         }
 
     }

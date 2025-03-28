@@ -33,10 +33,6 @@ public class BlockManager : MonoBehaviour
         this.SpawnBricks();
     }
 
-    private void Start()
-    {
-    }
-
     private void SpawnBricks()
     {
         this.TotalBrickCount = 0;
@@ -108,6 +104,11 @@ public class BlockManager : MonoBehaviour
 
         Debug.Log($"[BlockManager] Total bricks spawned: {TotalBrickCount}");
         Debug.Log($"[BlockManager] First Ground Position: {FirstGroundPosition}");
+    }
+
+    public void ReturnAllRemainingBricks()
+    {
+        this.brickObjectPool.ReturnAll();
     }
 
     private static float GetColliderHeight(GameObject obj)

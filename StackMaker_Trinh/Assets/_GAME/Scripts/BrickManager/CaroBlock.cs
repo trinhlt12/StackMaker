@@ -16,9 +16,7 @@ public class CaroBlock : MonoBehaviour
             {
                 return;
             }
-            /*
             GameManager.Instance.SetGameState(GameState.Win);
-        */
         }
     }
 }

@@ -21,6 +21,16 @@ namespace _GAME.Scripts
             this.OnInit();
         }
 
+        private void OnEnable()
+        {
+            GameEvent.OnPlayerWin += HandleWin;
+        }
+
+        private void OnDisable()
+        {
+            GameEvent.OnPlayerWin -= HandleWin;
+        }
+
         #endregion
 
 
@@ -88,10 +98,15 @@ namespace _GAME.Scripts
             }
         }
 
-        private void ClearBricks()
+        public void ClearBricks()
         {
+            while (this.brickStack.Count > 0)
+            {
+                var brick = this.brickStack.Pop();
+                BlockManager.Instance.brickObjectPool.Return(brick);
+            }
 
-
+            this.UpdatePlayerVisualHeight();
         }
 
         private void UpdatePlayerVisualHeight()
@@ -106,5 +121,9 @@ namespace _GAME.Scripts
             return this.brickStack.Count > 0;
         }
 
+        private void HandleWin()
+        {
+            this.playerBB.playerStateMachine.ChangeToWinState();
+        }
     }
 }

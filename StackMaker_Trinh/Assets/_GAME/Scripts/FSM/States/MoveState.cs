@@ -134,7 +134,6 @@ namespace _GAME.Scripts.FSM.States
         public override void OnExit()
         {
             base.OnExit();
-            this._playerStateMachine.transform.DOKill();
         }
     }
 }

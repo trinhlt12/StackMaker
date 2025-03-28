@@ -13,6 +13,7 @@ namespace _GAME.Scripts.FSM
 
         public IdleState _idleState;
         public MoveState _moveState;
+        public WinState _winState;
 
         private void Awake()
         {
@@ -21,6 +22,7 @@ namespace _GAME.Scripts.FSM
 
             this._idleState    = new IdleState(this._stateMachine, this);
             this._moveState    = new MoveState(this._stateMachine, this);
+            this._winState     = new WinState(this._stateMachine, this);
         }
 
         private void Start()
@@ -45,6 +47,11 @@ namespace _GAME.Scripts.FSM
                 var offset = this.playerBB.GetComponent<CapsuleCollider>().bounds.size.y / 2;
                 moveState.UpdateTargetPosition(newTargetPosition + Vector3.up * offset);
             }
+        }
+
+        public void ChangeToWinState()
+        {
+            this._stateMachine.ChangeState(this._winState);
         }
 
     }
