@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using UnityEngine;
 
@@ -7,11 +8,14 @@ public class BlockManager : MonoBehaviour
     [SerializeField] private float      offsetY         = 1f;
     [SerializeField] private int        initialPoolSize = 50;
 
-    public static BlockManager Instance              { get; private set; }
-    public        int                 TotalBrickCount       { get; private set; }
-    public        Vector3?            FirstBrickPosition    { get; private set; }
+    public static BlockManager Instance                 { get; private set; }
+    public        int          TotalBrickCount          { get; private set; }
+    public        Vector3?     FirstBrickPosition       { get; private set; }
+    public        GameObject   FirstBrick               { get; private set; }
+    public        Vector3?     FirstBrickCenterPosition { get; private set; }
 
-    public Vector3? FirstBrickCenterPosition { get; private set; }
+    public GameObject FirstGroundBlock    { get; private set; }
+    public Vector3    FirstGroundPosition => FirstGroundBlock != null ? FirstGroundBlock.transform.position : Vector3.zero;
 
     public ObjectPool brickObjectPool;
 
@@ -27,8 +31,6 @@ public class BlockManager : MonoBehaviour
 
         this.brickObjectPool = new ObjectPool(brickPrefab, initialPoolSize);
         this.SpawnBricks();
-        Debug.Log(CountGroundBlocks());
-        Debug.Log(CountBridgeBlocks());
     }
 
     private void Start()
@@ -39,31 +41,73 @@ public class BlockManager : MonoBehaviour
     {
         this.TotalBrickCount = 0;
 
-        var groundObjects = GameObject.FindGameObjectsWithTag("Ground");
-        foreach (var ground in groundObjects)
+        var brickList  = new List<GameObject>();
+        var groundList = new List<GameObject>(GameObject.FindGameObjectsWithTag("Ground"));
+
+        // Sắp xếp Ground trước (Z tăng dần, X tăng dần)
+        groundList.Sort((a, b) =>
         {
+            float zA = a.transform.position.z;
+            float zB = b.transform.position.z;
 
+            if (!Mathf.Approximately(zA, zB))
+            {
+                return zA.CompareTo(zB);
+            }
+
+            float xA = a.transform.position.x;
+            float xB = b.transform.position.x;
+
+            return xA.CompareTo(xB);
+        });
+
+        if (groundList.Count > 0)
+        {
+            this.FirstGroundBlock = groundList[0];
+        }
+
+        foreach (var ground in groundList)
+        {
             var groundHeight = GetColliderHeight(ground);
-
-            var spawnPos = ground.transform.position + Vector3.up * (groundHeight);
+            var spawnPos     = ground.transform.position + Vector3.up * groundHeight;
 
             var brick = this.brickObjectPool.Get();
             brick.transform.position = spawnPos;
 
-            if (this.TotalBrickCount == 0)
-            {
-                this.FirstBrickPosition = spawnPos;
-
-                this.FirstBrickCenterPosition = new Vector3(
-                    Mathf.Floor(spawnPos.x) + 0.5f,
-                    spawnPos.y,
-                    Mathf.Floor(spawnPos.z) + 0.5f
-                );
-            }
-
+            brickList.Add(brick);
             this.TotalBrickCount++;
         }
+
+        brickList.Sort((a, b) =>
+        {
+            float zA = a.transform.position.z;
+            float zB = b.transform.position.z;
+
+            if (!Mathf.Approximately(zA, zB))
+            {
+                return zA.CompareTo(zB);
+            }
+
+            float xA = a.transform.position.x;
+            float xB = b.transform.position.x;
+
+            return xA.CompareTo(xB);
+        });
+
+        if (brickList.Count > 0)
+        {
+            var firstBrick = brickList[0];
+            this.FirstBrickPosition = firstBrick.transform.position;
+
+            this.FirstBrickCenterPosition = new Vector3(
+                Mathf.Floor(firstBrick.transform.position.x) + 0.5f,
+                firstBrick.transform.position.y,
+                Mathf.Floor(firstBrick.transform.position.z) + 0.5f
+            );
+        }
+
         Debug.Log($"[BlockManager] Total bricks spawned: {TotalBrickCount}");
+        Debug.Log($"[BlockManager] First Ground Position: {FirstGroundPosition}");
     }
 
     private static float GetColliderHeight(GameObject obj)
@@ -100,7 +144,6 @@ public class BlockManager : MonoBehaviour
         return block.transform.position;
     }
 
-
     private static int CountGroundBlocks()
     {
         var groundLayer      = LayerMask.NameToLayer("Ground");
@@ -125,9 +168,7 @@ public class BlockManager : MonoBehaviour
 
         foreach (var bridge in bridgeObjects)
         {
-
             bridgeBlockCount++;
-
         }
         return bridgeBlockCount;
     }

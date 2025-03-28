@@ -18,9 +18,6 @@ namespace _GAME.Scripts.FSM.States
         {
             base.OnEnter();
 
-
-            GameEvent.OnPlayerOutOfBricks += HandlePlayerOutOfBricks;
-
             var swipe = this._playerStateMachine.playerBB.currentSwipeDirection;
 
             _moveDirection = swipe switch
@@ -42,13 +39,6 @@ namespace _GAME.Scripts.FSM.States
             this._targetPosition = FindTargetPosition();
             Debug.DrawRay(_targetPosition + Vector3.up * 0.5f, Vector3.up * 0.5f, Color.cyan, 2f);
             Debug.Log("[MoveState] Target: " + _targetPosition);
-        }
-
-        private void HandlePlayerOutOfBricks()
-        {
-            GameEvent.OnPlayerOutOfBricks -= HandlePlayerOutOfBricks;
-
-            this._stateMachine.ChangeState(this._playerStateMachine._idleState);
         }
 
         public override void OnUpdate()

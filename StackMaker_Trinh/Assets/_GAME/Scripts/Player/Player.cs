@@ -42,7 +42,7 @@ namespace _GAME.Scripts
 
             var cube = brick.transform.GetChild(0).gameObject;
             var yOffset = this.brickHeight * this.brickStack.Count;
-            cube.transform.localPosition = new Vector3(0, yOffset - this.brickHeight/2, 0);
+            cube.transform.localPosition = new Vector3(0, yOffset - this.brickHeight, 0);
             this.UpdatePlayerVisualHeight();
 
         }
@@ -60,10 +60,6 @@ namespace _GAME.Scripts
             PlaceBrick(topBrick, bridgeBlock);
 
             UpdatePlayerVisualHeight();
-
-
-            Debug.Log(brickStack.Count);
-            Debug.Log(bridgeBlock.transform.position);
         }
 
         private void PlaceBrick(GameObject topBrick, GameObject bridgeBlock)
@@ -109,12 +105,6 @@ namespace _GAME.Scripts
         {
             return this.brickStack.Count > 0;
         }
-
-        public void StopMoving()
-        {
-            GameEvent.OnPlayerOutOfBricks?.Invoke();
-        }
-
 
     }
 }

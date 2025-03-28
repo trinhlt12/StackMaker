@@ -19,6 +19,8 @@ namespace _GAME.Scripts.Level
             }
             Instance = this;
             DontDestroyOnLoad(this);
+
+            PlacePlayer();
         }
 
         private void Start()
@@ -28,6 +30,16 @@ namespace _GAME.Scripts.Level
 
         public void InitLevel()
         {
+        }
+
+        public void PlacePlayer()
+        {
+            Debug.Log(this.blockManager.FirstGroundPosition);
+
+            var firstGroundBlockPosition = this.blockManager.FirstGroundPosition;
+            var groundHeight = this.blockManager.FirstGroundBlock.GetComponent<BoxCollider>().bounds.size.y;
+
+            this.player.transform.position = firstGroundBlockPosition + Vector3.up * this.player.GetComponent<CapsuleCollider>().height/2;
         }
     }
 }

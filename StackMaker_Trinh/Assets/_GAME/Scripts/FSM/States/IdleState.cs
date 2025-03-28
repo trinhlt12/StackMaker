@@ -1,5 +1,6 @@
 namespace _GAME.Scripts.FSM.States
 {
+    using _GAME.Scripts.BrickManager;
     using _GAME.Scripts.GameManager;
 
     public class IdleState : BaseState
@@ -12,6 +13,7 @@ namespace _GAME.Scripts.FSM.States
             base.OnEnter();
             this._playerStateMachine.playerBB.ResetSwipe();
             GameEvent.OnInputPermissionChanged?.Invoke(true);
+            BridgeManager.Instance.UnlockAll();
         }
 
         public override void OnUpdate()

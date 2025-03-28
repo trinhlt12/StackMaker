@@ -10,6 +10,11 @@ namespace _GAME.Scripts.BrickManager
 
         public bool HasBrick => _hasBrick;
 
+        private void Awake()
+        {
+            BridgeManager.Instance.AddBridgeBlock(this);
+        }
+
         public void SetHasBrick()
         {
             _hasBrick = true;
@@ -24,7 +29,12 @@ namespace _GAME.Scripts.BrickManager
 
                 if(!player.HasBrick())
                 {
-                    player.StopMoving();
+                    int currentIndex = BridgeManager.Instance.GetPlayerIndexOnBridge(player.transform.position);
+                    Debug.Log(currentIndex);
+                    if(currentIndex >=0)
+                    {
+                        BridgeManager.Instance.LockRemainingBridgeBlocks(currentIndex);
+                    }
                     return;
                 }
 
@@ -32,6 +42,15 @@ namespace _GAME.Scripts.BrickManager
 
 
                 player.RemoveBrick(bridgeBlock);
+            }
+        }
+
+        public void SetColliderEnabled(bool enabled)
+        {
+            var col = GetComponent<BoxCollider>();
+            if (col != null)
+            {
+                col.enabled = enabled;
             }
         }
     }
