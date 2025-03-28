@@ -8,7 +8,7 @@ public class LevelBuilderTool : EditorWindow
         None,
         Ground,
         Brick,
-        Obstacle,
+        Bridge,
         Base
     }
 
@@ -16,7 +16,7 @@ public class LevelBuilderTool : EditorWindow
 
     private GameObject groundBlockPrefab;
     private GameObject brickBlockPrefab;
-    private GameObject obstacleBlockPrefab;
+    private GameObject bridgeBlockPrefab;
     private GameObject baseBlockPrefab;
 
     private Vector3? lastPlacedPosition = null;
@@ -45,10 +45,10 @@ public class LevelBuilderTool : EditorWindow
 
         GUILayout.Space(10);
         GUILayout.Label("🔧 Block Prefabs", EditorStyles.boldLabel);
-        groundBlockPrefab = (GameObject)EditorGUILayout.ObjectField("Ground Prefab", groundBlockPrefab, typeof(GameObject), false);
-        brickBlockPrefab = (GameObject)EditorGUILayout.ObjectField("Brick Prefab", brickBlockPrefab, typeof(GameObject), false);
-        obstacleBlockPrefab = (GameObject)EditorGUILayout.ObjectField("Obstacle Prefab", obstacleBlockPrefab, typeof(GameObject), false);
-        baseBlockPrefab = (GameObject)EditorGUILayout.ObjectField("Base Prefab", baseBlockPrefab, typeof(GameObject), false);
+        groundBlockPrefab      = (GameObject)EditorGUILayout.ObjectField("Ground Prefab", groundBlockPrefab, typeof(GameObject), false);
+        brickBlockPrefab       = (GameObject)EditorGUILayout.ObjectField("Brick Prefab", brickBlockPrefab, typeof(GameObject), false);
+        this.bridgeBlockPrefab = (GameObject)EditorGUILayout.ObjectField("Bridge Prefab", this.bridgeBlockPrefab, typeof(GameObject), false);
+        baseBlockPrefab        = (GameObject)EditorGUILayout.ObjectField("Base Prefab", baseBlockPrefab, typeof(GameObject), false);
     }
 
     private void OnSceneGUI(SceneView sceneView)
@@ -155,10 +155,10 @@ public class LevelBuilderTool : EditorWindow
         return currentBlockType switch
         {
             BlockType.Ground => groundBlockPrefab,
-            BlockType.Brick => brickBlockPrefab,
-            BlockType.Obstacle => obstacleBlockPrefab,
-            BlockType.Base => baseBlockPrefab,
-            _ => null
+            BlockType.Brick  => brickBlockPrefab,
+            BlockType.Bridge => this.bridgeBlockPrefab,
+            BlockType.Base   => baseBlockPrefab,
+            _                => null
         };
     }
 
@@ -175,26 +175,7 @@ public class LevelBuilderTool : EditorWindow
         }
 
         block.transform.SetParent(root.transform);
-        /*SetLayerRecursively(block, LayerMask.NameToLayer(layerName));
-        SetTagRecursively(block, layerName);*/
-    }
 
-    private static void SetLayerRecursively(GameObject obj, int layer)
-    {
-        obj.layer = layer;
-        foreach (Transform child in obj.transform)
-        {
-            SetLayerRecursively(child.gameObject, layer);
-        }
-    }
-
-    private static void SetTagRecursively(GameObject obj, string tag)
-    {
-        obj.tag = tag;
-        foreach (Transform child in obj.transform)
-        {
-            SetTagRecursively(child.gameObject, tag);
-        }
     }
 
     private void TryEraseBlockAtMousePosition(Event e)

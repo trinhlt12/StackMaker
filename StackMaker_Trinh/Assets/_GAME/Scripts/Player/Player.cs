@@ -10,7 +10,6 @@ namespace _GAME.Scripts
         [SerializeField] private PlayerBlackboard playerBB;
 
         private readonly Stack<GameObject> brickStack = new Stack<GameObject>();
-        private          ObjectPool        brickVisualPool;
         private          float             brickHeight;
 
         #region UNITY CALLBACKS
@@ -26,7 +25,6 @@ namespace _GAME.Scripts
         public void OnInit()
         {
             ClearBricks();
-            this.brickVisualPool = new ObjectPool(this.playerBB.brickVisualPrefab.transform.GetChild(0).gameObject, 20);
         }
 
         public void PickUpBrick(BrickBlock brick)
