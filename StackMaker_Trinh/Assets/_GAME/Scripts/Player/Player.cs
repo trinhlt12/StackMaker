@@ -32,6 +32,7 @@ namespace _GAME.Scripts
             this.brickHeight = brick.BrickHeight;
 
             this.brickStack.Push(brick.gameObject);
+
             brick.transform.SetParent(this.playerBB.brickStackRoot);
 
             brick.gameObject.transform.localPosition = Vector3.zero;
@@ -45,8 +46,15 @@ namespace _GAME.Scripts
 
         }
 
-        private void RemoveBrick()
+        public void RemoveBrick()
         {
+            //if stack is empty, return
+            if (this.brickStack.Count == 0)
+            {
+                return;
+            }
+            brickStack.Pop();
+            Debug.Log(brickStack.Count);
 
         }
 
