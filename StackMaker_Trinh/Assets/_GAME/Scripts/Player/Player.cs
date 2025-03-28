@@ -2,6 +2,7 @@ namespace _GAME.Scripts
 {
     using System;
     using System.Collections.Generic;
+    using _GAME.Scripts.BrickManager;
     using _GAME.Scripts.FSM;
     using UnityEngine;
 
@@ -81,6 +82,12 @@ namespace _GAME.Scripts
             if (brickCollider != null)
             {
                 brickCollider.enabled = false;
+            }
+
+            var bridge = bridgeBlock.GetComponent<BridgeBlock>();
+            if (bridge != null)
+            {
+                bridge.SetHasBrick();
             }
         }
 

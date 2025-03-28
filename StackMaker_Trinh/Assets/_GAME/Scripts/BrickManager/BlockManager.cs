@@ -28,6 +28,7 @@ public class BlockManager : MonoBehaviour
         this.brickObjectPool = new ObjectPool(brickPrefab, initialPoolSize);
         this.SpawnBricks();
         Debug.Log(CountGroundBlocks());
+        Debug.Log(CountBridgeBlocks());
     }
 
     private void Start()
