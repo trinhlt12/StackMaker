@@ -9,7 +9,8 @@ public class LevelBuilderTool : EditorWindow
         Ground,
         Brick,
         Bridge,
-        Base
+        Base,
+        Caro
     }
 
     private BlockType currentBlockType = BlockType.None;
@@ -18,6 +19,7 @@ public class LevelBuilderTool : EditorWindow
     private GameObject brickBlockPrefab;
     private GameObject bridgeBlockPrefab;
     private GameObject baseBlockPrefab;
+    private GameObject caroBlockPrefab;
 
     private Vector3? lastPlacedPosition = null;
 
@@ -49,6 +51,7 @@ public class LevelBuilderTool : EditorWindow
         brickBlockPrefab       = (GameObject)EditorGUILayout.ObjectField("Brick Prefab", brickBlockPrefab, typeof(GameObject), false);
         this.bridgeBlockPrefab = (GameObject)EditorGUILayout.ObjectField("Bridge Prefab", this.bridgeBlockPrefab, typeof(GameObject), false);
         baseBlockPrefab        = (GameObject)EditorGUILayout.ObjectField("Base Prefab", baseBlockPrefab, typeof(GameObject), false);
+        caroBlockPrefab        = (GameObject)EditorGUILayout.ObjectField("Caro Prefab", caroBlockPrefab, typeof(GameObject), false);
     }
 
     private void OnSceneGUI(SceneView sceneView)
@@ -158,6 +161,7 @@ public class LevelBuilderTool : EditorWindow
             BlockType.Brick  => brickBlockPrefab,
             BlockType.Bridge => this.bridgeBlockPrefab,
             BlockType.Base   => baseBlockPrefab,
+            BlockType.Caro   => caroBlockPrefab,
             _                => null
         };
     }
