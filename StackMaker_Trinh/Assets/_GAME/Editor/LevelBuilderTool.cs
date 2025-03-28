@@ -182,7 +182,7 @@ public class LevelBuilderTool : EditorWindow
 
     }
 
-    private void TryEraseBlockAtMousePosition(Event e)
+    private static void TryEraseBlockAtMousePosition(Event e)
     {
         Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit))

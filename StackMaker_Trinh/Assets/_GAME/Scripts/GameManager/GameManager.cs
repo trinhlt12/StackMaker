@@ -3,9 +3,18 @@ namespace _GAME.Scripts.GameManager
     using System;
     using UnityEngine;
 
+    public enum GameState
+    {
+        Playing,
+        Win,
+        Lose
+    }
+
     public class GameManager : MonoBehaviour
     {
-        public GameManager Instance { get; private set; }
+        public static GameManager Instance { get; private set; }
+
+        public GameState CurrentGameState { get; private set; } = GameState.Playing;
 
         private void Awake()
         {
@@ -16,6 +25,22 @@ namespace _GAME.Scripts.GameManager
             }
             Instance = this;
             DontDestroyOnLoad(this);
+        }
+
+        public void SetGameState(GameState newState)
+        {
+            if(CurrentGameState == newState) return;
+
+            CurrentGameState = newState;
+
+            switch (newState)
+            {
+                case GameState.Win:
+                    break;
+                case GameState.Lose:
+                    break;
+            }
+
         }
 
     }

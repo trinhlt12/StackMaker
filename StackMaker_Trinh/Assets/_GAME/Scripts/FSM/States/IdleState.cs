@@ -1,5 +1,7 @@
 namespace _GAME.Scripts.FSM.States
 {
+    using _GAME.Scripts.GameManager;
+
     public class IdleState : BaseState
     {
         public IdleState(StateMachine stateMachine, PlayerStateMachine playerStateMachine) :
@@ -8,7 +10,8 @@ namespace _GAME.Scripts.FSM.States
         public override void OnEnter()
         {
             base.OnEnter();
-            InputManager.Instance.SetCanAcceptInput(true);
+            this._playerStateMachine.playerBB.ResetSwipe();
+            GameEvent.OnInputPermissionChanged?.Invoke(true);
         }
 
         public override void OnUpdate()

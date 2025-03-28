@@ -4,6 +4,7 @@ namespace _GAME.Scripts
     using System.Collections.Generic;
     using _GAME.Scripts.BrickManager;
     using _GAME.Scripts.FSM;
+    using _GAME.Scripts.GameManager;
     using UnityEngine;
 
     public class Player : MonoBehaviour
@@ -103,5 +104,17 @@ namespace _GAME.Scripts
                 = Vector3.up * (this.brickStack.Count * this.brickHeight);
 
         }
+
+        public bool HasBrick()
+        {
+            return this.brickStack.Count > 0;
+        }
+
+        public void StopMoving()
+        {
+            GameEvent.OnPlayerOutOfBricks?.Invoke();
+        }
+
+
     }
 }

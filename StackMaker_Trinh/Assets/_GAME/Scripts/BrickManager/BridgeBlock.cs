@@ -20,8 +20,17 @@ namespace _GAME.Scripts.BrickManager
 
             if (other.CompareTag("Player"))
             {
-                bridgeBlock = this.gameObject;
                 var player = other.gameObject.GetComponent<Player>();
+
+                if(!player.HasBrick())
+                {
+                    player.StopMoving();
+                    return;
+                }
+
+                bridgeBlock = this.gameObject;
+
+
                 player.RemoveBrick(bridgeBlock);
             }
         }

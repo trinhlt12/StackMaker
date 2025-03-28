@@ -1,5 +1,6 @@
 namespace _GAME.Scripts.FSM.States
 {
+    using _GAME.Scripts.GameManager;
     using DG.Tweening;
     using UnityEngine;
 
@@ -17,6 +18,9 @@ namespace _GAME.Scripts.FSM.States
         {
             base.OnEnter();
 
+
+            GameEvent.OnPlayerOutOfBricks += HandlePlayerOutOfBricks;
+
             var swipe = this._playerStateMachine.playerBB.currentSwipeDirection;
 
             _moveDirection = swipe switch
@@ -28,7 +32,11 @@ namespace _GAME.Scripts.FSM.States
                 SwipeDirection.None     => Vector3.zero
             };
 
+            GameEvent.OnInputPermissionChanged?.Invoke(false);
+
+            /*
             this._playerStateMachine.playerBB.ResetSwipe();
+            */
 
 
             this._targetPosition = FindTargetPosition();
@@ -36,10 +44,16 @@ namespace _GAME.Scripts.FSM.States
             Debug.Log("[MoveState] Target: " + _targetPosition);
         }
 
+        private void HandlePlayerOutOfBricks()
+        {
+            GameEvent.OnPlayerOutOfBricks -= HandlePlayerOutOfBricks;
+
+            this._stateMachine.ChangeState(this._playerStateMachine._idleState);
+        }
+
         public override void OnUpdate()
         {
             base.OnUpdate();
-            InputManager.Instance.SetCanAcceptInput(false);
 
             MoveTowardToTarget(_targetPosition);
 
@@ -65,7 +79,9 @@ namespace _GAME.Scripts.FSM.States
         {
             var raycastHeight   = 0.2f;
             var raycastDistance = 1.5f;
+            var bridgeLayer     = this._playerStateMachine.playerBB.bridgeLayer;
             var groundLayer     = this._playerStateMachine.playerBB.groundLayer;
+            var validLayer      = bridgeLayer | groundLayer;
             var playerPosition  = this._playerStateMachine.transform.position;
 
 
@@ -77,7 +93,7 @@ namespace _GAME.Scripts.FSM.States
                 var nextPos   = currentPosition + _moveDirection * _stepSize;
                 var rayOrigin = nextPos + Vector3.up * raycastHeight;
 
-                var isGroundBelow = Physics.Raycast(rayOrigin, Vector3.down, raycastDistance, groundLayer);
+                var isGroundBelow = Physics.Raycast(rayOrigin, Vector3.down, raycastDistance, validLayer);
 
                 //start debug
                 var rayColor = isGroundBelow ? Color.green : Color.red;
@@ -86,7 +102,9 @@ namespace _GAME.Scripts.FSM.States
 
                 if (!isGroundBelow)
                 {
+                    /*
                     this._playerStateMachine.playerBB.canMove = currentPosition != playerPosition;
+                    */
                     return currentPosition;
                 }
 

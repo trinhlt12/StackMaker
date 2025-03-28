@@ -39,14 +39,9 @@ public class BlockManager : MonoBehaviour
     {
         this.TotalBrickCount = 0;
 
-        var allObjects  = FindObjectsOfType<GameObject>();
-        var groundLayer = LayerMask.NameToLayer("Ground");
-
         var groundObjects = GameObject.FindGameObjectsWithTag("Ground");
         foreach (var ground in groundObjects)
         {
-
-            if (ground.layer != groundLayer) continue;
 
             var groundHeight = GetColliderHeight(ground);
 

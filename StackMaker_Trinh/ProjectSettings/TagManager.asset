@@ -8,6 +8,7 @@ TagManager:
   - Brick
   - Ground
   - Bridge
+  - Caro
   layers:
   - Default
   - TransparentFX

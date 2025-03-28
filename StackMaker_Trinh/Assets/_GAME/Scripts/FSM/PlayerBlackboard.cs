@@ -6,12 +6,11 @@ namespace _GAME.Scripts.FSM
 
     public class PlayerBlackboard : MonoBehaviour
     {
-        public Transform           playerVisual;
-        public Transform           brickStackRoot;
-        public GameObject          brickVisualPrefab;
-        public float               moveSpeed = 5f;
-        public LayerMask           groundLayer;
-        public bool                canMove = true;
+        public Transform playerVisual;
+        public Transform brickStackRoot;
+        public float     moveSpeed = 5f;
+        public LayerMask groundLayer;
+        public LayerMask    bridgeLayer;
 
         public SwipeDirection currentSwipeDirection =>
             InputManager.Instance.CanAcceptInput ? InputManager.Instance.CurrentSwipeDirection : SwipeDirection.None;

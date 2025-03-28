@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using _GAME.Scripts.GameManager;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
@@ -40,6 +41,8 @@ public class InputManager : MonoBehaviour
         DontDestroyOnLoad(this);
 
         _inputActions = new PlayerInputActions();
+
+        GameEvent.OnInputPermissionChanged += HandleInputPermissionChanged;
     }
 
     private void OnEnable()
@@ -52,6 +55,17 @@ public class InputManager : MonoBehaviour
             Vector2 delta = this._swipeEnd - this._swipeStart;
             DetectSwipeDirection(delta);
         };
+    }
+
+    private void OnDestroy()
+    {
+        GameEvent.OnInputPermissionChanged -= HandleInputPermissionChanged;
+    }
+
+    private void HandleInputPermissionChanged(bool canInput)
+    {
+        CanAcceptInput = canInput;
+        if (!canInput) ResetSwipeDirection();
     }
 
     private void DetectSwipeDirection(Vector2 delta)
@@ -77,12 +91,6 @@ public class InputManager : MonoBehaviour
     public void ResetSwipeDirection()
     {
         CurrentSwipeDirection = SwipeDirection.None;
-    }
-
-    public void SetCanAcceptInput(bool value)
-    {
-        CanAcceptInput = value;
-        if (!value) ResetSwipeDirection();
     }
 }
 
