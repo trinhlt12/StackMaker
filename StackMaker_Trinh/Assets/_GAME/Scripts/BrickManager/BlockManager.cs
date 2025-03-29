@@ -28,6 +28,9 @@ public class BlockManager : MonoBehaviour
         }
         Instance = this;
 
+    }
+    public void Init()
+    {
         this.brickObjectPool = new ObjectPool(brickPrefab, initialPoolSize);
         this.SpawnBricks();
     }

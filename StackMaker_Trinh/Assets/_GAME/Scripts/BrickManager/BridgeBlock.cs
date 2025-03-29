@@ -10,7 +10,7 @@ namespace _GAME.Scripts.BrickManager
 
         public bool HasBrick => _hasBrick;
 
-        private void Awake()
+        private void Start()
         {
             BridgeManager.Instance.AddBridgeBlock(this);
         }

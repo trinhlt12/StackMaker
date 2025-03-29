@@ -14,8 +14,19 @@ namespace _GAME.Scripts.BrickManager
 
         private void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
             Instance = this;
         }
+
+        public void Init()
+        {
+            this.bridgeBlocks.Clear();
+        }
+
 
         public void AddBridgeBlock(BridgeBlock bridgeBlock)
         {

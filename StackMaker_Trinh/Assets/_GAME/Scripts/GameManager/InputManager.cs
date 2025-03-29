@@ -38,14 +38,13 @@ public class InputManager : MonoBehaviour
             return;
         }
         Instance = this;
+    }
 
+    public void Init()
+    {
         _inputActions = new PlayerInputActions();
 
         GameEvent.OnInputPermissionChanged += HandleInputPermissionChanged;
-    }
-
-    private void OnEnable()
-    {
         _inputActions.Enable();
         this._inputActions.Player.Touch.performed    += ctx => this._swipeEnd   = ctx.ReadValue<Vector2>();
         this._inputActions.Player.TouchPress.started += ctx => this._swipeStart = this._inputActions.Player.Touch.ReadValue<Vector2>();
@@ -55,7 +54,6 @@ public class InputManager : MonoBehaviour
             DetectSwipeDirection(delta);
         };
     }
-
     private void OnDestroy()
     {
         GameEvent.OnInputPermissionChanged -= HandleInputPermissionChanged;

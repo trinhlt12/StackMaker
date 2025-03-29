@@ -15,8 +15,10 @@ namespace _GAME.Scripts.UI
                 return;
             }
             Instance = this;
-            DontDestroyOnLoad(this);
+        }
 
+        public void Init()
+        {
             this.HideWinPanel();
         }
 

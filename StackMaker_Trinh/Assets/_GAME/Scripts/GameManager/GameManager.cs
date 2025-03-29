@@ -27,6 +27,10 @@ namespace _GAME.Scripts.GameManager
             Instance = this;
         }
 
+        public void Init()
+        {
+        }
+
         public void SetGameState(GameState newState)
         {
             if(CurrentGameState == newState) return;
