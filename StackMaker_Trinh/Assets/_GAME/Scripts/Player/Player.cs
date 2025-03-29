@@ -84,7 +84,6 @@ namespace _GAME.Scripts
             topBrick.gameObject.transform.position = spawnPos;
             brick.transform.GetChild(0).transform.localPosition = Vector3.zero;
 
-            //stop collision after placing the brick:
             var brickCollider = topBrick.GetComponent<BoxCollider>();
             if (brickCollider != null)
             {

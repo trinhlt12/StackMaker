@@ -5,6 +5,7 @@ namespace _GAME.Scripts.UI
     public class UIManager : MonoBehaviour
     {
         public static UIManager Instance { get; private set; }
+        [SerializeField] private GameObject Canvas;
         [SerializeField] private GameObject winPanel;
 
         private void Awake()
@@ -20,11 +21,16 @@ namespace _GAME.Scripts.UI
         public void Init()
         {
             this.HideWinPanel();
+            this.ShowCanvas();
+        }
+
+        private void ShowCanvas()
+        {
+            this.Canvas?.SetActive(true);
         }
 
         public void ShowWinPanel()
         {
-            Debug.Log("WIN PANEL");
             this.winPanel?.SetActive(true);
         }
 

@@ -15,7 +15,7 @@ namespace _GAME.Scripts.Level
         public static                                                          LevelManager  Instance { get; set; }
         private                                                                GameObject    _currentLevelInstance;
 
-        private int currentLevelIndex = 1;
+        private int currentLevelIndex = 2;
 
         private void Awake()
         {

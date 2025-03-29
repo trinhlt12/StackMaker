@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class BlockManager : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class BlockManager : MonoBehaviour
     public Vector3    FirstGroundPosition => FirstGroundBlock != null ? FirstGroundBlock.transform.position : Vector3.zero;
 
     public ObjectPool brickObjectPool;
+
+    public List<GameObject> groundList = new List<GameObject>();
 
     private void Awake()
     {
@@ -40,7 +43,7 @@ public class BlockManager : MonoBehaviour
         this.TotalBrickCount = 0;
 
         var brickList  = new List<GameObject>();
-        var groundList = new List<GameObject>(GameObject.FindGameObjectsWithTag("Ground"));
+        groundList = new List<GameObject>(GameObject.FindGameObjectsWithTag("Ground"));
 
         groundList.Sort((a, b) =>
         {
