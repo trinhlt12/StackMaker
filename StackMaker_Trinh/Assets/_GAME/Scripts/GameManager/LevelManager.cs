@@ -10,7 +10,7 @@ namespace _GAME.Scripts.Level
         [SerializeField]                                               private Transform     LevelRoot;
         [SerializeField]                                               private Player        player;
         [FormerlySerializedAs("brickSpawnerManager")] [SerializeField] private BlockManager  blockManager;
-        public int totalLevelCount = 2;
+        public                                                                 int           totalLevelCount = 2;
         private                                                                BridgeManager bridgeManager;
         public static                                                          LevelManager  Instance { get; set; }
         private                                                                GameObject    _currentLevelInstance;
@@ -37,9 +37,8 @@ namespace _GAME.Scripts.Level
             string levelName = $"Level_{this.currentLevelIndex}";
             var    prefab    = Resources.Load<GameObject>(levelName);
 
-            if(prefab == null) return;
+            if (prefab == null) return;
             this._currentLevelInstance = Instantiate(prefab, LevelRoot);
-
         }
 
         public void LoadNextLevel()
@@ -59,13 +58,17 @@ namespace _GAME.Scripts.Level
             return currentLevelIndex + 1 <= totalLevelCount;
         }
 
+        public int GetCurrentLevel()
+        {
+            return this.currentLevelIndex;
+        }
 
         public void Init()
         {
             LoadLevel();
-            this.player              = FindObjectOfType<Player>();
+            this.player        = FindObjectOfType<Player>();
             this.bridgeManager = FindObjectOfType<BridgeManager>();
-            this.blockManager = FindObjectOfType<BlockManager>();
+            this.blockManager  = FindObjectOfType<BlockManager>();
 
             this.blockManager.Init();
             this.bridgeManager.Init();
@@ -73,15 +76,14 @@ namespace _GAME.Scripts.Level
             BridgeManager.Instance.SortBridgeBlocks();
         }
 
-
         public void PlacePlayer()
         {
             Debug.Log(this.blockManager.FirstGroundPosition);
 
             var firstGroundBlockPosition = this.blockManager.FirstGroundPosition;
-            var groundHeight = this.blockManager.FirstGroundBlock.GetComponent<BoxCollider>().bounds.size.y;
+            var groundHeight             = this.blockManager.FirstGroundBlock.GetComponent<BoxCollider>().bounds.size.y;
 
-            this.player.transform.position = firstGroundBlockPosition + Vector3.up * this.player.GetComponent<CapsuleCollider>().height/2;
+            this.player.transform.position = firstGroundBlockPosition + Vector3.up * this.player.GetComponent<CapsuleCollider>().height / 2;
         }
     }
 }
