@@ -7,12 +7,14 @@ namespace _GAME.Scripts.Level
 
     public class LevelManager : MonoBehaviour
     {
-        [SerializeField] private Transform   LevelRoot;
+        [SerializeField]                                               private Transform     LevelRoot;
         [SerializeField]                                               private Player        player;
         [FormerlySerializedAs("brickSpawnerManager")] [SerializeField] private BlockManager  blockManager;
         private                                                                BridgeManager bridgeManager;
-        private                                                                LevelManager  Instance { get; set; }
-        private GameObject _currentLevelInstance;
+        public static                                                          LevelManager  Instance { get; set; }
+        private                                                                GameObject    _currentLevelInstance;
+
+        private int currentLevelIndex = 1;
 
         private void Awake()
         {
@@ -24,14 +26,15 @@ namespace _GAME.Scripts.Level
             Instance = this;
         }
 
-        private void LoadLevel(string levelName)
+        private void LoadLevel()
         {
             if (this._currentLevelInstance != null)
             {
                 Destroy(this._currentLevelInstance);
             }
 
-            var prefab = Resources.Load<GameObject>($"{levelName}");
+            string levelName = $"Level_{this.currentLevelIndex}";
+            var    prefab    = Resources.Load<GameObject>(levelName);
 
             if (prefab != null)
             {
@@ -39,15 +42,26 @@ namespace _GAME.Scripts.Level
             }
             else
             {
-                Debug.LogError($"{levelName} not found");
+                Debug.LogError($"Level '{levelName}' not found!");
+
             }
+        }
+
+        public void LoadNextLevel()
+        {
+            BridgeManager.Instance.ClearAllBridgeBricks();
+
+            this.currentLevelIndex++;
+            Init();
+            this.PlacePlayer();
         }
 
         public void Init()
         {
-            LoadLevel("Level_1");
+            LoadLevel();
             this.player              = FindObjectOfType<Player>();
             this.bridgeManager = FindObjectOfType<BridgeManager>();
+            this.blockManager = FindObjectOfType<BlockManager>();
 
             this.blockManager.Init();
             this.bridgeManager.Init();

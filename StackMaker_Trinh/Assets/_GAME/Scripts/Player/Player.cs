@@ -92,10 +92,10 @@ namespace _GAME.Scripts
             }
 
             var bridge = bridgeBlock.GetComponent<BridgeBlock>();
-            if (bridge != null)
+            /*if (bridge != null)
             {
                 bridge.SetHasBrick();
-            }
+            }*/
         }
 
         public void ClearBricks()

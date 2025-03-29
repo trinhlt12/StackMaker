@@ -42,7 +42,6 @@ public class BlockManager : MonoBehaviour
         var brickList  = new List<GameObject>();
         var groundList = new List<GameObject>(GameObject.FindGameObjectsWithTag("Ground"));
 
-        // Sắp xếp Ground trước (Z tăng dần, X tăng dần)
         groundList.Sort((a, b) =>
         {
             float zA = a.transform.position.z;
@@ -106,11 +105,6 @@ public class BlockManager : MonoBehaviour
 
         Debug.Log($"[BlockManager] Total bricks spawned: {TotalBrickCount}");
         Debug.Log($"[BlockManager] First Ground Position: {FirstGroundPosition}");
-    }
-
-    public void ReturnAllRemainingBricks()
-    {
-        this.brickObjectPool.ReturnAll();
     }
 
     private static float GetColliderHeight(GameObject obj)

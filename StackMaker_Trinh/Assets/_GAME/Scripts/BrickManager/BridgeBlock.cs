@@ -7,18 +7,30 @@ namespace _GAME.Scripts.BrickManager
     {
         private GameObject bridgeBlock;
         private bool       _hasBrick = false;
+        private GameObject _currentBrick;
 
-        public bool HasBrick => _hasBrick;
+        public bool HasBrick()
+        {
+            return _currentBrick != null;
+        }
+
+        public GameObject GetBrick() => _currentBrick;
+
 
         private void Start()
         {
             BridgeManager.Instance.AddBridgeBlock(this);
         }
 
-        public void SetHasBrick()
+        public void ClearBrick()
+        {
+            _currentBrick = null;
+        }
+
+        /*public void SetHasBrick()
         {
             _hasBrick = true;
-        }
+        }*/
         private void OnTriggerEnter(Collider other)
         {
             if(this._hasBrick) return;

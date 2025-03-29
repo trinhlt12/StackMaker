@@ -18,9 +18,10 @@ namespace _GAME.Scripts.FSM.States
         public override void OnUpdate()
         {
             base.OnUpdate();
-            /*
-            GameEvent.OnInputPermissionChanged(false);
-        */
+            if (this.GetElapsedTime() >= 2f)
+            {
+                this._stateMachine.ChangeState(this._playerStateMachine._idleState);
+            }
         }
 
         public override void OnExit()

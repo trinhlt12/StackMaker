@@ -48,6 +48,19 @@ namespace _GAME.Scripts.BrickManager
             });
         }
 
+        public void ClearAllBridgeBricks()
+        {
+            foreach (var bridgeBlock in bridgeBlocks)
+            {
+                if (bridgeBlock.HasBrick())
+                {
+                    var brick = bridgeBlock.GetBrick();
+                    BlockManager.Instance.brickObjectPool.Return(brick);
+                    bridgeBlock.ClearBrick();
+                }
+            }
+        }
+
 
         public int GetPlayerIndexOnBridge(Vector3 playerPosition)
         {

@@ -1,6 +1,7 @@
 namespace _GAME.Scripts.GameManager
 {
     using System;
+    using _GAME.Scripts.Level;
     using _GAME.Scripts.UI;
     using UnityEngine;
 
@@ -43,10 +44,20 @@ namespace _GAME.Scripts.GameManager
                     Debug.Log("WIN");
                     GameEvent.OnPlayerWin?.Invoke();
                     UIManager.Instance.ShowWinPanel();
+                    Invoke(nameof(LoadNextLevel), 2f);
+                    break;
+                case GameState.Playing:
+                    UIManager.Instance.HideWinPanel();
                     break;
                 case GameState.Lose:
                     break;
             }
+        }
+
+        private void LoadNextLevel()
+        {
+            SetGameState(GameState.Playing);
+            LevelManager.Instance.LoadNextLevel();
         }
 
     }
