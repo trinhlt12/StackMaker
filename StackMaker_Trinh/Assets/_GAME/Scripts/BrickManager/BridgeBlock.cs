@@ -9,6 +9,11 @@ namespace _GAME.Scripts.BrickManager
         private bool       _hasBrick = false;
         private GameObject _currentBrick;
 
+        public void SetHasBrick(GameObject brick)
+        {
+            _currentBrick = brick;
+            _hasBrick     = true;
+        }
         public bool HasBrick()
         {
             return _currentBrick != null;
@@ -27,10 +32,6 @@ namespace _GAME.Scripts.BrickManager
             _currentBrick = null;
         }
 
-        /*public void SetHasBrick()
-        {
-            _hasBrick = true;
-        }*/
         private void OnTriggerEnter(Collider other)
         {
             if(this._hasBrick) return;
@@ -66,5 +67,7 @@ namespace _GAME.Scripts.BrickManager
                 col.enabled = enabled;
             }
         }
+
+
     }
 }

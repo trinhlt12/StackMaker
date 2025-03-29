@@ -24,6 +24,7 @@ namespace _GAME.Scripts.BrickManager
 
         public void Init()
         {
+            this.ClearAllBridgeBricks();
             this.bridgeBlocks.Clear();
         }
 
@@ -50,16 +51,17 @@ namespace _GAME.Scripts.BrickManager
 
         public void ClearAllBridgeBricks()
         {
-            foreach (var bridgeBlock in bridgeBlocks)
+            foreach (var bridge in bridgeBlocks)
             {
-                if (bridgeBlock.HasBrick())
+                if (bridge.HasBrick())
                 {
-                    var brick = bridgeBlock.GetBrick();
+                    var brick = bridge.GetBrick();
+                    bridge.ClearBrick();
                     BlockManager.Instance.brickObjectPool.Return(brick);
-                    bridgeBlock.ClearBrick();
                 }
             }
         }
+
 
 
         public int GetPlayerIndexOnBridge(Vector3 playerPosition)

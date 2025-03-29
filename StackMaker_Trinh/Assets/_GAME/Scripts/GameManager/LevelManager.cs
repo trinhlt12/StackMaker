@@ -10,6 +10,7 @@ namespace _GAME.Scripts.Level
         [SerializeField]                                               private Transform     LevelRoot;
         [SerializeField]                                               private Player        player;
         [FormerlySerializedAs("brickSpawnerManager")] [SerializeField] private BlockManager  blockManager;
+        public int totalLevelCount = 2;
         private                                                                BridgeManager bridgeManager;
         public static                                                          LevelManager  Instance { get; set; }
         private                                                                GameObject    _currentLevelInstance;
@@ -36,25 +37,28 @@ namespace _GAME.Scripts.Level
             string levelName = $"Level_{this.currentLevelIndex}";
             var    prefab    = Resources.Load<GameObject>(levelName);
 
-            if (prefab != null)
-            {
-                this._currentLevelInstance = Instantiate(prefab, LevelRoot);
-            }
-            else
-            {
-                Debug.LogError($"Level '{levelName}' not found!");
+            if(prefab == null) return;
+            this._currentLevelInstance = Instantiate(prefab, LevelRoot);
 
-            }
         }
 
         public void LoadNextLevel()
         {
-            BridgeManager.Instance.ClearAllBridgeBricks();
-
+            if (!HasNextLevel())
+            {
+                return;
+            }
             this.currentLevelIndex++;
             Init();
+            BridgeManager.Instance.ClearAllBridgeBricks();
             this.PlacePlayer();
         }
+
+        public bool HasNextLevel()
+        {
+            return currentLevelIndex + 1 <= totalLevelCount;
+        }
+
 
         public void Init()
         {
