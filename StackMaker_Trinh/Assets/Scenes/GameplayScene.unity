@@ -943,6 +943,7 @@ MonoBehaviour:
   bridgeLayer:
     serializedVersion: 2
     m_Bits: 256
+  animator: {fileID: 1353329873}
 --- !u!114 &1041066494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1155,6 +1156,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6788538757290762322, guid: ad4137f595ec8e2449cacca9df7d3735, type: 3}
   m_PrefabInstance: {fileID: 1798914842}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &1353329873 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6788538757290762327, guid: ad4137f595ec8e2449cacca9df7d3735, type: 3}
+  m_PrefabInstance: {fileID: 1798914842}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1433175127
 GameObject:
   m_ObjectHideFlags: 0
@@ -1290,7 +1296,7 @@ GameObject:
   - component: {fileID: 1508389781}
   - component: {fileID: 1508389780}
   m_Layer: 0
-  m_Name: BrickSpawner
+  m_Name: BlockManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1308,7 +1314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9dce50335354776aa0983bafcbf1b55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brickPrefab: {fileID: 8787153503698116678, guid: c182f65a90c60674b99ef4642d521000, type: 3}
+  brickPrefab: {fileID: 8364101630549057145, guid: 3afdc7f99445e9341b73886787a19d3b, type: 3}
   offsetY: 1
   initialPoolSize: 50
   groundList: []
@@ -1946,8 +1952,8 @@ SceneRoots:
   - {fileID: 27285556}
   - {fileID: 879563532}
   - {fileID: 1041066489}
-  - {fileID: 1508389781}
   - {fileID: 1221284819}
+  - {fileID: 1508389781}
   - {fileID: 1949251422}
   - {fileID: 980011160}
   - {fileID: 1433175129}
