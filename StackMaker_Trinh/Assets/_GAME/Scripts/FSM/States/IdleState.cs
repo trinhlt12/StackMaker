@@ -5,8 +5,8 @@ namespace _GAME.Scripts.FSM.States
 
     public class IdleState : BaseState
     {
-        public IdleState(StateMachine stateMachine, PlayerStateMachine playerStateMachine) :
-            base(stateMachine, playerStateMachine) { }
+        public IdleState(StateMachine stateMachine, PlayerStateMachine playerStateMachine, string animationName) :
+            base(stateMachine, playerStateMachine, animationName) { }
 
         public override void OnEnter()
         {

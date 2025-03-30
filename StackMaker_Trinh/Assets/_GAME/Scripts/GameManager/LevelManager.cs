@@ -88,7 +88,7 @@ namespace _GAME.Scripts.Level
             var firstGroundBlockPosition = this.blockManager.FirstGroundPosition;
             var groundHeight             = this.blockManager.FirstGroundBlock.GetComponent<BoxCollider>().bounds.size.y;
 
-            this.player.transform.position = groundBlock.transform.position + Vector3.up * this.player.GetComponent<CapsuleCollider>().height / 2;
+            this.player.transform.position = groundBlock.transform.position;
         }
     }
 }

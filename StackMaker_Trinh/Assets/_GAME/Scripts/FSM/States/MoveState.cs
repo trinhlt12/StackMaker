@@ -12,8 +12,8 @@ namespace _GAME.Scripts.FSM.States
         private       Vector3 _moveDirection;
         private       bool    _isMoving = false;
         private       bool    _isOnBridge;
-        public MoveState(StateMachine stateMachine, PlayerStateMachine playerStateMachine) :
-            base(stateMachine, playerStateMachine) { }
+        public MoveState(StateMachine stateMachine, PlayerStateMachine playerStateMachine, string animationName) :
+            base(stateMachine, playerStateMachine, animationName) { }
 
         public override void OnEnter()
         {

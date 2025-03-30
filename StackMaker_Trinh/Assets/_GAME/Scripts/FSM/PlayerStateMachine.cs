@@ -20,9 +20,9 @@ namespace _GAME.Scripts.FSM
             this.playerBB = GetComponent<PlayerBlackboard>();
             this._stateMachine = new StateMachine();
 
-            this._idleState    = new IdleState(this._stateMachine, this);
-            this._moveState    = new MoveState(this._stateMachine, this);
-            this._winState     = new WinState(this._stateMachine, this);
+            this._idleState    = new IdleState(this._stateMachine, this, "Idle");
+            this._moveState    = new MoveState(this._stateMachine, this, "Move");
+            this._winState     = new WinState(this._stateMachine, this, "Win");
         }
 
         private void Start()

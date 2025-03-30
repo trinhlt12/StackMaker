@@ -4,7 +4,8 @@ namespace _GAME.Scripts.FSM.States
 
     public class WinState : BaseState
     {
-        public WinState(StateMachine stateMachine, PlayerStateMachine playerStateMachine) : base(stateMachine, playerStateMachine)
+        public WinState(StateMachine stateMachine, PlayerStateMachine playerStateMachine, string animationName)
+            : base(stateMachine, playerStateMachine, animationName)
         {
         }
 
