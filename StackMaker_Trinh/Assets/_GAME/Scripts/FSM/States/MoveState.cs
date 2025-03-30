@@ -46,6 +46,7 @@ namespace _GAME.Scripts.FSM.States
         {
             base.OnUpdate();
 
+            this.RotatePlayer();
             this._isOnBridge = BridgeManager.Instance.IsPlayerOnBridge(_playerStateMachine.transform.position);
             MoveTowardToTarget(_targetPosition);
 
@@ -72,7 +73,6 @@ namespace _GAME.Scripts.FSM.States
                 _stateMachine.ChangeState(_playerStateMachine._idleState);
             }
         }
-
 
         private Vector3 SnapToGridCenter(Vector3 position)
         {
@@ -128,7 +128,13 @@ namespace _GAME.Scripts.FSM.States
             _isMoving       = true;
         }
 
-
+        private void RotatePlayer()
+        {
+            var rotation = Quaternion.LookRotation(_moveDirection);
+            //only rotate the player's visual representation:
+            var playerVisual = this._playerStateMachine.playerBB.playerVisual;
+            playerVisual.DORotateQuaternion(rotation, 0.2f);
+        }
 
         public override void OnExit()
         {
