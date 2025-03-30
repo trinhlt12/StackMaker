@@ -7,15 +7,17 @@ namespace _GAME.Scripts.Level
 
     public class LevelManager : MonoBehaviour
     {
-        [SerializeField]                                               private Transform     LevelRoot;
-        [SerializeField]                                               private Player        player;
-        [FormerlySerializedAs("brickSpawnerManager")] [SerializeField] private BlockManager  blockManager;
-        public                                                                 int           totalLevelCount = 2;
-        private                                                                BridgeManager bridgeManager;
-        public static                                                          LevelManager  Instance { get; set; }
-        private                                                                GameObject    _currentLevelInstance;
+        [SerializeField] private Transform     LevelRoot;
+        [SerializeField] private Player        player;
+        [SerializeField] private BlockManager  blockManager;
+        public                   int           totalLevelCount = 2;
+        private                  BridgeManager bridgeManager;
+        public static            LevelManager  Instance { get; set; }
+        private                  GameObject    _currentLevelInstance;
 
-        private int currentLevelIndex = 2;
+        private int currentLevelIndex = 1;
+
+        private int indexToPlacePlayer;
 
         private void Awake()
         {
@@ -78,12 +80,15 @@ namespace _GAME.Scripts.Level
 
         public void PlacePlayer()
         {
+            //level 1 : index 0
+            //level 2 : index 37
+            var groundBlock = BlockManager.Instance.GetGroundObjectAtIndex(this.indexToPlacePlayer);
             Debug.Log(this.blockManager.FirstGroundPosition);
 
             var firstGroundBlockPosition = this.blockManager.FirstGroundPosition;
             var groundHeight             = this.blockManager.FirstGroundBlock.GetComponent<BoxCollider>().bounds.size.y;
 
-            this.player.transform.position = firstGroundBlockPosition + Vector3.up * this.player.GetComponent<CapsuleCollider>().height / 2;
+            this.player.transform.position = groundBlock.transform.position + Vector3.up * this.player.GetComponent<CapsuleCollider>().height / 2;
         }
     }
 }

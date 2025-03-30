@@ -5,6 +5,7 @@ namespace _GAME.Scripts
     using _GAME.Scripts.BrickManager;
     using _GAME.Scripts.FSM;
     using _GAME.Scripts.GameManager;
+    using DG.Tweening;
     using UnityEngine;
 
     public class Player : MonoBehaviour
@@ -52,9 +53,19 @@ namespace _GAME.Scripts
 
             var cube = brick.transform.GetChild(0).gameObject;
             var yOffset = this.brickHeight * this.brickStack.Count;
-            cube.transform.localPosition = new Vector3(0, yOffset - this.brickHeight, 0);
+
+            //update brick visual height:
+            UpdateBrickVisualHeight(cube, yOffset);
+
             this.UpdatePlayerVisualHeight();
 
+        }
+
+        private void UpdateBrickVisualHeight(GameObject brickVisual, float offset)
+        {
+            brickVisual.transform.DOLocalMoveY(offset - this.brickHeight, 0.2f)
+                .SetEase(Ease.Linear);
+            /*brick.transform.localPosition = new Vector3(0, offset - this.brickHeight, 0);*/
         }
 
         public void RemoveBrick(GameObject bridgeBlock)
@@ -110,8 +121,11 @@ namespace _GAME.Scripts
 
         private void UpdatePlayerVisualHeight()
         {
-            this.playerBB.playerVisual.localPosition
-                = Vector3.up * (this.brickStack.Count * this.brickHeight);
+            float newY = this.brickStack.Count * this.brickHeight;
+
+            this.playerBB.playerVisual.DOLocalMoveY(newY, 0.2f).SetEase(ease: Ease.Linear);
+            /*this.playerBB.playerVisual.localPosition
+                = Vector3.up * (this.brickStack.Count * this.brickHeight);*/
 
         }
 

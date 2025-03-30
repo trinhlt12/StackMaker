@@ -7,7 +7,6 @@ namespace _GAME.Scripts.FSM.States
 
     public class MoveState : BaseState
     {
-        private       int     _maxSteps = 50;
         private const int     _stepSize = 1;
         private       Vector3 _targetPosition;
         private       Vector3 _moveDirection;

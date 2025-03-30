@@ -1389,6 +1389,7 @@ MonoBehaviour:
   brickPrefab: {fileID: 8787153503698116678, guid: c182f65a90c60674b99ef4642d521000, type: 3}
   offsetY: 1
   initialPoolSize: 50
+  groundList: []
 --- !u!4 &1508389781
 Transform:
   m_ObjectHideFlags: 0

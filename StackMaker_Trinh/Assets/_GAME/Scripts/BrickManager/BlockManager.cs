@@ -161,6 +161,19 @@ public class BlockManager : MonoBehaviour
         return groundBlockCount;
     }
 
+    public GameObject GetGroundObjectAtIndex(int i)
+    {
+        if (i >= 0 && i < groundList.Count)
+        {
+            return groundList[i];
+        }
+        else
+        {
+            Debug.LogError("Index out of range");
+            return null;
+        }
+    }
+
     private static int CountBridgeBlocks()
     {
         var bridgeBlockCount = 0;
