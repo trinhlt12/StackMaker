@@ -63,9 +63,8 @@ namespace _GAME.Scripts
 
         private void UpdateBrickVisualHeight(GameObject brickVisual, float offset)
         {
-            brickVisual.transform.DOLocalMoveY(offset - this.brickHeight, 0.2f)
+            brickVisual.transform.DOLocalMoveY(offset - this.brickHeight, 0.1f)
                 .SetEase(Ease.Linear);
-            /*brick.transform.localPosition = new Vector3(0, offset - this.brickHeight, 0);*/
         }
 
         public void RemoveBrick(GameObject bridgeBlock)
@@ -85,7 +84,9 @@ namespace _GAME.Scripts
 
         private void PlaceBrick(GameObject topBrick, GameObject bridgeBlock)
         {
-            var brick = topBrick.GetComponent<BrickBlock>();
+            var brick       = topBrick.GetComponent<BrickBlock>();
+
+            ResetBrickVisual(topBrick);
 
             brick.transform.SetParent(null);
 
@@ -93,7 +94,6 @@ namespace _GAME.Scripts
             var spawnPos = bridgeBlock.transform.position + Vector3.up * bridgeBlockHeight/2;
 
             topBrick.gameObject.transform.position = spawnPos;
-            brick.transform.GetChild(0).transform.localPosition = Vector3.zero;
 
             var brickCollider = topBrick.GetComponent<BoxCollider>();
             if (brickCollider != null)
@@ -107,6 +107,14 @@ namespace _GAME.Scripts
                 bridge.SetHasBrick(topBrick);
             }
         }
+
+        private void ResetBrickVisual(GameObject brick)
+        {
+            var visual = brick.transform.GetChild(0);
+            visual.DOKill();
+            visual.localPosition = Vector3.zero;
+        }
+
 
         public void ClearBricks()
         {
