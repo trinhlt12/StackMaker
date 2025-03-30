@@ -59,18 +59,25 @@ namespace _GAME.Scripts.FSM.States
                 _isMoving = true;
             }
 
-            Vector3 currentPos = _playerStateMachine.transform.position;
+            var currentPos = _playerStateMachine.transform.position;
 
-            float step = _playerStateMachine.playerBB.moveSpeed * Time.deltaTime;
+            var step = _playerStateMachine.playerBB.moveSpeed * Time.deltaTime;
 
             _playerStateMachine.transform.position = Vector3.MoveTowards(currentPos, target, step);
 
 
             if (Vector3.Distance(currentPos, target) < 0.01f)
             {
-                _playerStateMachine.transform.position = SnapToGridCenter(target);
-                _isMoving                              = false;
-                _stateMachine.ChangeState(_playerStateMachine._idleState);
+                var snapTarget = SnapToGridCenter(target);
+                //lerp to snap target:
+
+                _playerStateMachine.transform.DOMove(snapTarget, 0.1f).SetEase(Ease.Linear)
+                    .OnComplete(() =>
+                        {
+                            this._playerStateMachine.transform.DOKill();
+                            _stateMachine.ChangeState(_playerStateMachine._idleState);
+                        }
+                    );
             }
         }
 
@@ -125,7 +132,6 @@ namespace _GAME.Scripts.FSM.States
         public void UpdateTargetPosition(Vector3 newTarget)
         {
             _targetPosition = newTarget;
-            _isMoving       = true;
         }
 
         private void RotatePlayer()
