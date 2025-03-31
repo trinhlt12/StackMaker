@@ -16,7 +16,6 @@ public class BlockManager : MonoBehaviour
     public        Vector3?     FirstBrickCenterPosition { get; private set; }
 
     public GameObject FirstGroundBlock    { get; private set; }
-    public Vector3    FirstGroundPosition => FirstGroundBlock != null ? FirstGroundBlock.transform.position : Vector3.zero;
 
     public ObjectPool brickObjectPool;
 
@@ -151,64 +150,5 @@ public class BlockManager : MonoBehaviour
         }
 
         return 1f; // fallback
-    }
-
-    private Vector3 GetBlockCenter(GameObject block)
-    {
-        var col = block.GetComponent<Collider>();
-        if (col != null)
-        {
-            return col.bounds.center;
-        }
-
-        var rend = block.GetComponent<Renderer>();
-        if (rend != null)
-        {
-            return rend.bounds.center;
-        }
-
-        return block.transform.position;
-    }
-
-    private static int CountGroundBlocks()
-    {
-        var groundLayer      = LayerMask.NameToLayer("Ground");
-        var groundBlockCount = 0;
-        var groundObjects    = GameObject.FindGameObjectsWithTag("Ground");
-
-        foreach (var ground in groundObjects)
-        {
-            if (ground.layer == groundLayer)
-            {
-                groundBlockCount++;
-            }
-        }
-
-        return groundBlockCount;
-    }
-
-    public GameObject GetGroundObjectAtIndex(int i)
-    {
-        if (i >= 0 && i < groundList.Count)
-        {
-            return groundList[i];
-        }
-        else
-        {
-            Debug.LogError("Index out of range");
-            return null;
-        }
-    }
-
-    private static int CountBridgeBlocks()
-    {
-        var bridgeBlockCount = 0;
-        var bridgeObjects    = GameObject.FindGameObjectsWithTag("Bridge");
-
-        foreach (var bridge in bridgeObjects)
-        {
-            bridgeBlockCount++;
-        }
-        return bridgeBlockCount;
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using _GAME.Scripts.Camera;
 using _GAME.Scripts.GameManager;
 using UnityEngine;
 
@@ -28,7 +29,9 @@ public class InputManager : MonoBehaviour
 
     private       Vector2 _swipeEnd;
     private       Vector2 _swipeStart;
+    private Vector2 _lastTouchPosition;
     private const float   swipeThreshold = 50f; //pixels
+    private       bool    _isDraggingCamera = false;
 
     private void Awake()
     {
@@ -47,13 +50,39 @@ public class InputManager : MonoBehaviour
         GameEvent.OnInputPermissionChanged += HandleInputPermissionChanged;
         _inputActions.Enable();
         this._inputActions.Player.Touch.performed    += ctx => this._swipeEnd   = ctx.ReadValue<Vector2>();
-        this._inputActions.Player.TouchPress.started += ctx => this._swipeStart = this._inputActions.Player.Touch.ReadValue<Vector2>();
+        this._inputActions.Player.TouchPress.started += ctx =>
+        {
+            this._swipeStart       = this._inputActions.Player.Touch.ReadValue<Vector2>();
+            this._lastTouchPosition = this._swipeStart;
+            this._isDraggingCamera = this._swipeStart.y >= Screen.height / 2;
+
+        };
         this._inputActions.Player.TouchPress.canceled += ctx =>
         {
-            Vector2 delta = this._swipeEnd - this._swipeStart;
-            DetectSwipeDirection(delta);
+            var delta = this._swipeEnd - this._swipeStart;
+            if (this._isDraggingCamera)
+            {
+                CameraController.Instance.ReturnToDefaultAngle();
+            }
+            else
+            {
+                DetectSwipeDirection(delta);
+            }
+            this._isDraggingCamera = false;
         };
     }
+
+    private void Update()
+    {
+        if (this._isDraggingCamera)
+        {
+            var currentTouchPosition = this._inputActions.Player.Touch.ReadValue<Vector2>();
+            var deltaX               = currentTouchPosition.x - this._lastTouchPosition.x;
+            CameraController.Instance.RotateCamera(deltaX);
+            this._lastTouchPosition = currentTouchPosition;
+        }
+    }
+
     private void OnDestroy()
     {
         GameEvent.OnInputPermissionChanged -= HandleInputPermissionChanged;
