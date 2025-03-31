@@ -7,13 +7,11 @@ namespace _GAME.Scripts.Level
 
     public class LevelManager : MonoBehaviour
     {
-        [SerializeField] private Transform     LevelRoot;
-        [SerializeField] private Player        player;
-        [SerializeField] private BlockManager  blockManager;
-        public                   int           totalLevelCount = 2;
-        private                  BridgeManager bridgeManager;
-        public static            LevelManager  Instance { get; set; }
-        private                  GameObject    _currentLevelInstance;
+        [SerializeField] private Transform    LevelRoot;
+        [SerializeField] private Player       player;
+        public                   int          totalLevelCount = 2;
+        public static            LevelManager Instance { get; set; }
+        public GameObject _currentLevelInstance { get; private set; }
 
         private int currentLevelIndex = 1;
 
@@ -31,6 +29,7 @@ namespace _GAME.Scripts.Level
 
         private void LoadLevel()
         {
+            BlockManager.Instance.groundList.Clear();
             if (this._currentLevelInstance != null)
             {
                 Destroy(this._currentLevelInstance);
@@ -50,10 +49,20 @@ namespace _GAME.Scripts.Level
                 return;
             }
             this.currentLevelIndex++;
+            ResetLevelData();
+
             Init();
-            BridgeManager.Instance.ClearAllBridgeBricks();
             this.PlacePlayer();
         }
+
+        private void ResetLevelData()
+        {
+            BlockManager.Instance.ClearBricks();
+            BlockManager.Instance.groundList.Clear();
+            BlockManager.Instance.TotalBrickCount = 0;
+            BridgeManager.Instance.ClearAllBridgeBricks();
+        }
+
 
         public bool HasNextLevel()
         {
@@ -69,26 +78,26 @@ namespace _GAME.Scripts.Level
         {
             LoadLevel();
             this.player        = FindObjectOfType<Player>();
-            this.bridgeManager = FindObjectOfType<BridgeManager>();
-            this.blockManager  = FindObjectOfType<BlockManager>();
 
-            this.blockManager.Init();
-            this.bridgeManager.Init();
+            BlockManager.Instance.Init();
+            BridgeManager.Instance.Init();
 
             BridgeManager.Instance.SortBridgeBlocks();
         }
 
         public void PlacePlayer()
         {
-            //level 1 : index 0
-            //level 2 : index 37
-            var groundBlock = BlockManager.Instance.GetGroundObjectAtIndex(this.indexToPlacePlayer);
-            Debug.Log(this.blockManager.FirstGroundPosition);
+            var firstGroundBlock = BlockManager.Instance.FirstGroundBlock;
+            if (firstGroundBlock == null)
+            {
+                return;
+            }
 
-            var firstGroundBlockPosition = this.blockManager.FirstGroundPosition;
-            var groundHeight             = this.blockManager.FirstGroundBlock.GetComponent<BoxCollider>().bounds.size.y;
+            var groundHeight = firstGroundBlock.GetComponent<BoxCollider>().bounds.size.y;
+            var spawnPos     = firstGroundBlock.transform.position + Vector3.up * groundHeight;
 
-            this.player.transform.position = groundBlock.transform.position;
+            this.player.transform.position = spawnPos;
         }
+
     }
 }
