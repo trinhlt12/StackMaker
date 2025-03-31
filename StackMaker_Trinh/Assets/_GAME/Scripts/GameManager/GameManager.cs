@@ -46,8 +46,9 @@ namespace _GAME.Scripts.GameManager
                 case GameState.Win:
                     GameEvent.OnPlayerWin?.Invoke();
                     UIManager.Instance.ShowWinPanel();
-
                     sfxChannel.Raise(SFXType.Win);
+
+                    this.SaveCurrentLevel();
 
                     Invoke(nameof(LoadNextLevel), 2f);
                     break;
@@ -65,6 +66,12 @@ namespace _GAME.Scripts.GameManager
         {
             SetGameState(GameState.Playing);
             LevelManager.Instance.LoadNextLevel();
+        }
+
+        private void SaveCurrentLevel()
+        {
+            PlayerPrefs.SetInt("SavedLevel", LevelManager.Instance.GetCurrentLevel() + 1);
+            PlayerPrefs.Save();
         }
 
     }

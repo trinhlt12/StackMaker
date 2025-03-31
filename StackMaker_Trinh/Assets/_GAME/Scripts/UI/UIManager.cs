@@ -1,6 +1,7 @@
 namespace _GAME.Scripts.UI
 {
     using _GAME.Scripts.GameManager;
+    using _GAME.Scripts.Level;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -87,6 +88,8 @@ namespace _GAME.Scripts.UI
         public void OnClickPlayButton()
         {
             HideMainMenuPanel();
+            var savedLevel = PlayerPrefs.GetInt("SavedLevel", 1);
+            LevelManager.Instance.LoadSpecificLevel(savedLevel);
 
             GameManager.Instance.SetGameState(GameState.Playing);
         }

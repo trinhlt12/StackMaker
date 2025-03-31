@@ -99,5 +99,17 @@ namespace _GAME.Scripts.Level
             this.player.transform.position = spawnPos;
         }
 
+        public void LoadSpecificLevel(int savedLevel)
+        {
+            if (savedLevel < 1 || savedLevel > this.totalLevelCount)
+            {
+                savedLevel = 1;
+            }
+
+            this.currentLevelIndex = savedLevel;
+            ResetLevelData();
+            Init();
+            this.PlacePlayer();
+        }
     }
 }
