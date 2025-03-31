@@ -37,7 +37,7 @@ namespace _GAME.Scripts.Camera
             this.transform.position = Vector3.Lerp(this.transform.position, desiredPosition, Time.deltaTime * 5);
             transform.LookAt(target);
 
-            if (this._isReturningToDefaultAngle)
+            if (this._isReturningToDefaultAngle && Input.touchCount == 0)
             {
                 this._currentAngle = Mathf.Lerp(this._currentAngle, this._defaultAngle, Time.deltaTime * 5f);
                 if (Mathf.Abs(this._currentAngle - this._defaultAngle) < 0.1f)
