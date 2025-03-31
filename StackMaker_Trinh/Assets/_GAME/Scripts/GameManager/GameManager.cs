@@ -1,12 +1,14 @@
 namespace _GAME.Scripts.GameManager
 {
     using System;
+    using _GAME.Scripts.GameManager.Audio;
     using _GAME.Scripts.Level;
     using _GAME.Scripts.UI;
     using UnityEngine;
 
     public enum GameState
     {
+        None,
         Playing,
         Win,
         Lose
@@ -14,9 +16,10 @@ namespace _GAME.Scripts.GameManager
 
     public class GameManager : MonoBehaviour
     {
+        [SerializeField] private AudioEventChannelSO sfxChannel;
         public static GameManager Instance { get; private set; }
 
-        public GameState CurrentGameState { get; private set; } = GameState.Playing;
+        public GameState CurrentGameState { get; private set; } = GameState.None;
 
         private void Awake()
         {
@@ -41,13 +44,17 @@ namespace _GAME.Scripts.GameManager
             switch (newState)
             {
                 case GameState.Win:
-                    Debug.Log("WIN");
                     GameEvent.OnPlayerWin?.Invoke();
                     UIManager.Instance.ShowWinPanel();
+
+                    sfxChannel.Raise(SFXType.Win);
+
                     Invoke(nameof(LoadNextLevel), 2f);
                     break;
                 case GameState.Playing:
                     UIManager.Instance.HideWinPanel();
+                    LevelManager.Instance.PlacePlayer();
+                    GameEvent.OnInputPermissionChanged?.Invoke(true);
                     break;
                 case GameState.Lose:
                     break;

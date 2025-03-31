@@ -5,12 +5,14 @@ namespace _GAME.Scripts
     using _GAME.Scripts.BrickManager;
     using _GAME.Scripts.FSM;
     using _GAME.Scripts.GameManager;
+    using _GAME.Scripts.GameManager.Audio;
     using DG.Tweening;
     using UnityEngine;
 
     public class Player : MonoBehaviour
     {
         [SerializeField] private PlayerBlackboard playerBB;
+        [SerializeField] private AudioEventChannelSO sfxChannel;
 
         private readonly Stack<GameObject> brickStack = new Stack<GameObject>();
         private          float             brickHeight;
@@ -42,6 +44,8 @@ namespace _GAME.Scripts
 
         public void PickUpBrick(BrickBlock brick)
         {
+            this.sfxChannel.Raise(SFXType.Pickup);
+
             this.brickHeight = brick.BrickHeight;
 
             this.brickStack.Push(brick.gameObject);
@@ -84,6 +88,8 @@ namespace _GAME.Scripts
 
         private void PlaceBrick(GameObject topBrick, GameObject bridgeBlock)
         {
+            this.sfxChannel.Raise(SFXType.Place);
+
             var brick       = topBrick.GetComponent<BrickBlock>();
 
             ResetBrickVisual(topBrick);
@@ -106,6 +112,7 @@ namespace _GAME.Scripts
             {
                 bridge.SetHasBrick(topBrick);
             }
+
         }
 
         private void ResetBrickVisual(GameObject brick)
