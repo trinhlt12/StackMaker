@@ -27,8 +27,14 @@ namespace _GAME.Scripts.Level
             Instance = this;
         }
 
-        private async System.Threading.Tasks.Task LoadLevelAsync()
+        public async System.Threading.Tasks.Task LoadLevelAsync()
         {
+            Debug.Log("Starting level loading...");
+            if (BlockManager.Instance == null)
+            {
+                Debug.LogError("BlockManager.Instance is null during level loading!");
+                return;
+            }
             BlockManager.Instance.groundList.Clear();
             if (this._currentLevelInstance != null)
             {
@@ -47,6 +53,7 @@ namespace _GAME.Scripts.Level
 
             if (prefab == null) return;
             this._currentLevelInstance = Instantiate(prefab, LevelRoot);
+            BlockManager.Instance.SpawnBricks();
         }
 
         public void LoadNextLevel()
@@ -58,7 +65,7 @@ namespace _GAME.Scripts.Level
             this.currentLevelIndex++;
             ResetLevelData();
 
-            Init();
+            /*Init();*/
             this.PlacePlayer();
         }
 
@@ -81,7 +88,7 @@ namespace _GAME.Scripts.Level
             return this.currentLevelIndex;
         }
 
-        public async void Init()
+        /*public async void Init()
         {
             Debug.Log("LevelManager.Init: Starting level loading...");
             await LoadLevelAsync();
@@ -98,7 +105,7 @@ namespace _GAME.Scripts.Level
 
             BridgeManager.Instance.SortBridgeBlocks();
             Debug.Log("LevelManager.Init: Initialization complete");
-        }
+        }*/
 
         public void PlacePlayer()
         {
@@ -123,7 +130,7 @@ namespace _GAME.Scripts.Level
 
             this.currentLevelIndex = savedLevel;
             ResetLevelData();
-            Init();
+            /*Init();*/
             this.PlacePlayer();
         }
     }

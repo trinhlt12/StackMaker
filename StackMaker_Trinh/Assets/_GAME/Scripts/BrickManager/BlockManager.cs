@@ -37,10 +37,17 @@ public class BlockManager : MonoBehaviour
         this.SpawnBricks();
     }
 
+    public void InitializePool()
+    {
+        this.brickObjectPool = new ObjectPool(brickPrefab, initialPoolSize);
+    }
     public void SpawnBricks()
     {
-        if(Instance == null)
+        Debug.Log("BlockManager.SpawnBricks: Starting brick spawning...");
+
+        if (this.brickObjectPool == null)
         {
+            Debug.LogError("BlockManager: brickObjectPool is null! Make sure InitializePool() was called.");
             return;
         }
 
