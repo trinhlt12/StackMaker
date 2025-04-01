@@ -67,8 +67,17 @@ namespace _GAME.Scripts
 
         private void UpdateBrickVisualHeight(GameObject brickVisual, float offset)
         {
-            brickVisual.transform.DOLocalMoveY(offset - this.brickHeight, 0.1f)
-                .SetEase(Ease.Linear);
+            brickVisual.transform.DOKill();
+            float targetY = offset - this.brickHeight;
+            brickVisual.transform.DOLocalMoveY(offset - this.brickHeight, 0.25f)
+                .SetEase(Ease.OutQuad)
+                .SetUpdate(UpdateType.Fixed)
+                .OnComplete(() =>
+                {
+                    var finalPos = brickVisual.transform.localPosition;
+                    finalPos.y                          = targetY;
+                    brickVisual.transform.localPosition = finalPos;
+                });
         }
 
         public void RemoveBrick(GameObject bridgeBlock)
@@ -136,11 +145,13 @@ namespace _GAME.Scripts
 
         private void UpdatePlayerVisualHeight()
         {
-            float newY = this.brickStack.Count * this.brickHeight;
+            var newY = this.brickStack.Count * this.brickHeight;
 
-            this.playerBB.playerVisual.DOLocalMoveY(newY, 0.2f).SetEase(ease: Ease.Linear);
-            /*this.playerBB.playerVisual.localPosition
-                = Vector3.up * (this.brickStack.Count * this.brickHeight);*/
+            this.playerBB.playerVisual.DOKill();
+            this.playerBB.playerVisual.DOLocalMoveY(newY, 0.25f)
+                .SetEase(ease: Ease.OutQuad)
+                .SetUpdate(UpdateType.Fixed);
+
 
         }
 

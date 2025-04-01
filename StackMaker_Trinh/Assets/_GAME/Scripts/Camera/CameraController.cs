@@ -66,5 +66,11 @@ namespace _GAME.Scripts.Camera
         {
             this._isReturningToDefaultAngle = true;
         }
+
+        public void EnableCamera(bool enabled)
+        {
+            this.enabled = enabled;
+        }
+
     }
 }

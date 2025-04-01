@@ -1,6 +1,7 @@
 namespace _GAME.Scripts.GameManager
 {
     using System;
+    using _GAME.Scripts.Camera;
     using _GAME.Scripts.GameManager.Audio;
     using _GAME.Scripts.Level;
     using _GAME.Scripts.UI;
@@ -11,7 +12,8 @@ namespace _GAME.Scripts.GameManager
         None,
         Playing,
         Win,
-        Lose
+        Lose,
+        Pause
     }
 
     public class GameManager : MonoBehaviour
@@ -53,13 +55,12 @@ namespace _GAME.Scripts.GameManager
                     Invoke(nameof(LoadNextLevel), 2f);
                     break;
                 case GameState.Playing:
-                    UIManager.Instance.HideWinPanel();
-                    /*
-                    LevelManager.Instance.PlacePlayer();
-                    */
-                    GameEvent.OnInputPermissionChanged?.Invoke(true);
+                    HandlePlaying();
                     break;
                 case GameState.Lose:
+                    break;
+                case GameState.Pause:
+                    HandlePause();
                     break;
             }
         }
@@ -76,5 +77,27 @@ namespace _GAME.Scripts.GameManager
             PlayerPrefs.Save();
         }
 
+        private void HandlePause()
+        {
+            UIManager.Instance.ShowPausePanel();
+            Time.timeScale = 0;
+            GameEvent.OnInputPermissionChanged?.Invoke(false);
+            CameraController.Instance.EnableCamera(false);
+        }
+
+        private void HandlePlaying()
+        {
+            UIManager.Instance.HideWinPanel();
+            UIManager.Instance.ShowIngameUI();
+
+            Time.timeScale = 1;
+            GameEvent.OnInputPermissionChanged?.Invoke(true);
+            CameraController.Instance.EnableCamera(true);
+        }
+
+        private void Update()
+        {
+            Debug.Log(CurrentGameState);
+        }
     }
 }

@@ -18,6 +18,10 @@ namespace _GAME.Scripts.UI
         [SerializeField] private GameObject mainMenuPanel;
         [SerializeField] private GameObject playButton;
 
+        [Header("Settings")]
+        [SerializeField] private GameObject pausePanel;
+        [SerializeField] private GameObject     pauseButton;
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -26,12 +30,25 @@ namespace _GAME.Scripts.UI
                 return;
             }
             Instance = this;
+
+            Init();
         }
 
-        public void Init()
+        private void Init()
         {
             this.HideWinPanel();
             this.ShowCanvas();
+            this.HidePausePanel();
+        }
+
+        public void ShowIngameUI()
+        {
+            this.pauseButton.SetActive(true);
+        }
+
+        private void HideIngameUI()
+        {
+            this.pauseButton.SetActive(false);
         }
 
         public void ShowLoadingPanel()
@@ -91,6 +108,28 @@ namespace _GAME.Scripts.UI
             var savedLevel = PlayerPrefs.GetInt("SavedLevel", 1);
             LevelManager.Instance.LoadSpecificLevelAsync(savedLevel);
 
+            GameManager.Instance.SetGameState(GameState.Playing);
+        }
+
+        public void OnClickPauseButton()
+        {
+            GameManager.Instance.SetGameState(GameState.Pause);
+            this.ShowPausePanel();
+        }
+
+        public void OnClickClosePausePanelButton()
+        {
+            HidePausePanel();
+        }
+
+        public void ShowPausePanel()
+        {
+            this.pausePanel?.SetActive(true);
+        }
+
+        public void HidePausePanel()
+        {
+            this.pausePanel?.SetActive(false);
             GameManager.Instance.SetGameState(GameState.Playing);
         }
     }

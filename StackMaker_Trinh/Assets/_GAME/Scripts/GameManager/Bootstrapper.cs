@@ -4,6 +4,7 @@ namespace _GAME.Scripts.GameManager
     using _GAME.Scripts.BrickManager;
     using _GAME.Scripts.Level;
     using _GAME.Scripts.UI;
+    using DG.Tweening;
     using UnityEngine;
 
     public class Bootstrapper : MonoBehaviour
@@ -23,6 +24,7 @@ namespace _GAME.Scripts.GameManager
         private void OnGameStart()
         {
             /*GraphicsSettingsManager.Instance.ApplyGraphicsSettings(GraphicsQuality.Low);*/
+            DOTween.useSafeMode = true;
             GameEvent.OnInputPermissionChanged?.Invoke(false);
             StartCoroutine(PreloadGameRoutine());
         }
