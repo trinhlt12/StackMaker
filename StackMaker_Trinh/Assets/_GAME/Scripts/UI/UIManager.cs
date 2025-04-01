@@ -89,7 +89,7 @@ namespace _GAME.Scripts.UI
         {
             HideMainMenuPanel();
             var savedLevel = PlayerPrefs.GetInt("SavedLevel", 1);
-            LevelManager.Instance.LoadSpecificLevel(savedLevel);
+            LevelManager.Instance.LoadSpecificLevelAsync(savedLevel);
 
             GameManager.Instance.SetGameState(GameState.Playing);
         }

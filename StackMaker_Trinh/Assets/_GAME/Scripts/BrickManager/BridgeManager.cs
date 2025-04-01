@@ -36,6 +36,7 @@ namespace _GAME.Scripts.BrickManager
 
         public void SortBridgeBlocks()
         {
+            this.bridgeBlocks.RemoveAll(block => block == null);
             bridgeBlocks.Sort((a, b) =>
             {
                 Vector3 posA = a.transform.position;
@@ -74,7 +75,10 @@ namespace _GAME.Scripts.BrickManager
 
             for (int i = 0; i < this.bridgeBlocks.Count; i++)
             {
-                var blockPosition = this.bridgeBlocks[i].transform.position;
+                var block = this.bridgeBlocks[i];
+                if (block == null) continue;
+
+                var blockPosition = block.transform.position;
 
                 if (
                     Mathf.Approximately(snappedPos.x, blockPosition.x) &&
@@ -87,6 +91,7 @@ namespace _GAME.Scripts.BrickManager
 
             return -1;
         }
+
 
         public void HandlePlayerOutOfBricks(GameObject block)
         {

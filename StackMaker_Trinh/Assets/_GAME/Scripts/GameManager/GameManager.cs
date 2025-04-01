@@ -54,7 +54,9 @@ namespace _GAME.Scripts.GameManager
                     break;
                 case GameState.Playing:
                     UIManager.Instance.HideWinPanel();
+                    /*
                     LevelManager.Instance.PlacePlayer();
+                    */
                     GameEvent.OnInputPermissionChanged?.Invoke(true);
                     break;
                 case GameState.Lose:
@@ -65,7 +67,7 @@ namespace _GAME.Scripts.GameManager
         private void LoadNextLevel()
         {
             SetGameState(GameState.Playing);
-            LevelManager.Instance.LoadNextLevel();
+            LevelManager.Instance.LoadNextLevelAsync();
         }
 
         private void SaveCurrentLevel()

@@ -1,21 +1,19 @@
 namespace _GAME.Scripts.Level
 {
     using System;
+    using System.Threading.Tasks;
     using _GAME.Scripts.BrickManager;
     using UnityEngine;
-    using UnityEngine.Serialization;
 
     public class LevelManager : MonoBehaviour
     {
         [SerializeField] private Transform    LevelRoot;
         [SerializeField] private Player       player;
         public                   int          totalLevelCount = 2;
-        public static            LevelManager Instance { get; set; }
-        public GameObject _currentLevelInstance { get; private set; }
+        public static            LevelManager Instance              { get; set; }
+        public                   GameObject   _currentLevelInstance { get; private set; }
 
         private int currentLevelIndex = 1;
-
-        private int indexToPlacePlayer;
 
         private void Awake()
         {
@@ -27,7 +25,7 @@ namespace _GAME.Scripts.Level
             Instance = this;
         }
 
-        public async System.Threading.Tasks.Task LoadLevelAsync()
+        public async Task LoadLevelAsync()
         {
             Debug.Log("Starting level loading...");
             if (BlockManager.Instance == null)
@@ -35,38 +33,52 @@ namespace _GAME.Scripts.Level
                 Debug.LogError("BlockManager.Instance is null during level loading!");
                 return;
             }
-            BlockManager.Instance.groundList.Clear();
+
             if (this._currentLevelInstance != null)
             {
                 Destroy(this._currentLevelInstance);
             }
 
             var levelName = $"Level_{this.currentLevelIndex}";
+            var request   = Resources.LoadAsync<GameObject>(levelName);
 
-            var request = Resources.LoadAsync<GameObject>(levelName);
             while (!request.isDone)
             {
-                await System.Threading.Tasks.Task.Yield();
+                await Task.Yield();
             }
 
-            var    prefab    = request.asset as GameObject;
-
+            var prefab = request.asset as GameObject;
             if (prefab == null) return;
+
             this._currentLevelInstance = Instantiate(prefab, LevelRoot);
             BlockManager.Instance.SpawnBricks();
+            BridgeManager.Instance.SortBridgeBlocks();
         }
 
-        public void LoadNextLevel()
+        public async Task ReloadLevelAsync()
         {
-            if (!HasNextLevel())
-            {
-                return;
-            }
-            this.currentLevelIndex++;
             ResetLevelData();
+            await LoadLevelAsync();
+            PlacePlayer();
+        }
 
-            /*Init();*/
-            this.PlacePlayer();
+        public async Task LoadNextLevelAsync()
+        {
+            if (!HasNextLevel()) return;
+
+            this.currentLevelIndex++;
+            await ReloadLevelAsync();
+        }
+
+        public async Task LoadSpecificLevelAsync(int savedLevel)
+        {
+            if (savedLevel < 1 || savedLevel > this.totalLevelCount)
+            {
+                savedLevel = 1;
+            }
+
+            this.currentLevelIndex = savedLevel;
+            await ReloadLevelAsync();
         }
 
         private void ResetLevelData()
@@ -76,7 +88,6 @@ namespace _GAME.Scripts.Level
             BlockManager.Instance.TotalBrickCount = 0;
             BridgeManager.Instance.ClearAllBridgeBricks();
         }
-
 
         public bool HasNextLevel()
         {
@@ -88,50 +99,14 @@ namespace _GAME.Scripts.Level
             return this.currentLevelIndex;
         }
 
-        /*public async void Init()
-        {
-            Debug.Log("LevelManager.Init: Starting level loading...");
-            await LoadLevelAsync();
-
-            Debug.Log("LevelManager.Init: Level loaded, initializing BlockManager...");
-            if (BlockManager.Instance == null)
-            {
-                Debug.LogError("BlockManager.Instance is null after level loading!");
-                return;
-            }
-
-            BlockManager.Instance.Init();
-            BridgeManager.Instance.Init();
-
-            BridgeManager.Instance.SortBridgeBlocks();
-            Debug.Log("LevelManager.Init: Initialization complete");
-        }*/
-
         public void PlacePlayer()
         {
             var firstGroundBlock = BlockManager.Instance.FirstGroundBlock;
-            if (firstGroundBlock == null)
-            {
-                return;
-            }
+            if (firstGroundBlock == null) return;
 
             var groundHeight = firstGroundBlock.GetComponent<BoxCollider>().bounds.size.y;
             var spawnPos     = firstGroundBlock.transform.position + Vector3.up * groundHeight;
-
             this.player.transform.position = spawnPos;
-        }
-
-        public void LoadSpecificLevel(int savedLevel)
-        {
-            if (savedLevel < 1 || savedLevel > this.totalLevelCount)
-            {
-                savedLevel = 1;
-            }
-
-            this.currentLevelIndex = savedLevel;
-            ResetLevelData();
-            /*Init();*/
-            this.PlacePlayer();
         }
     }
 }
