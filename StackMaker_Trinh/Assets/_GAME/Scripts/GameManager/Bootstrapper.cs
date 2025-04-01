@@ -37,7 +37,7 @@ namespace _GAME.Scripts.GameManager
             this.uiManager.HidePlayButton();
             uiManager.ShowLoadingPanel();
 
-            float progress = 0f;
+            var progress = 0f;
 
             yield return new WaitForSeconds(0.2f);
             progress += 0.1f;
