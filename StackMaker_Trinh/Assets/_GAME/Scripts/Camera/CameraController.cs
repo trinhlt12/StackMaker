@@ -12,9 +12,10 @@ namespace _GAME.Scripts.Camera
         [SerializeField] private float height = 10f;
         [SerializeField] private float rotationSpeed = 0.2f;
 
-        private float _currentAngle = 0f;
-        private float _defaultAngle = 0f;
-        private bool _isReturningToDefaultAngle = false;
+        private float _currentAngle              = 0f;
+        private float _defaultAngle              = 0f;
+        private bool  _isReturningToDefaultAngle = false;
+        private bool _canRotate = true;
 
         private void Awake()
         {
@@ -51,9 +52,7 @@ namespace _GAME.Scripts.Camera
 
         public void RotateCamera(float deltaX)
         {
-            /*
-            if(this._isReturningToDefaultAngle) return;
-            */
+            if(!this._canRotate) return;
             this._currentAngle += deltaX * this.rotationSpeed;
         }
 
@@ -67,9 +66,9 @@ namespace _GAME.Scripts.Camera
             this._isReturningToDefaultAngle = true;
         }
 
-        public void EnableCamera(bool enabled)
+        public void SetCanRotate(bool canRotate)
         {
-            this.enabled = enabled;
+            this._canRotate = canRotate;
         }
 
     }

@@ -62,13 +62,16 @@ namespace _GAME.Scripts.GameManager
                 case GameState.Pause:
                     HandlePause();
                     break;
+                case GameState.None:
+                    break;
             }
         }
 
         private void LoadNextLevel()
         {
-            SetGameState(GameState.Playing);
             LevelManager.Instance.LoadNextLevelAsync();
+            SetGameState(GameState.Playing);
+
         }
 
         private void SaveCurrentLevel()
@@ -81,8 +84,6 @@ namespace _GAME.Scripts.GameManager
         {
             UIManager.Instance.ShowPausePanel();
             Time.timeScale = 0;
-            GameEvent.OnInputPermissionChanged?.Invoke(false);
-            CameraController.Instance.EnableCamera(false);
         }
 
         private void HandlePlaying()
@@ -92,12 +93,16 @@ namespace _GAME.Scripts.GameManager
 
             Time.timeScale = 1;
             GameEvent.OnInputPermissionChanged?.Invoke(true);
-            CameraController.Instance.EnableCamera(true);
+            CameraController.Instance.SetCanRotate(true);
         }
 
         private void Update()
         {
-            Debug.Log(CurrentGameState);
+            if (CurrentGameState == GameState.Pause)
+            {
+                GameEvent.OnInputPermissionChanged?.Invoke(false);
+                CameraController.Instance.SetCanRotate(false);
+            }
         }
     }
 }
