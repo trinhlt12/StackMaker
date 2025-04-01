@@ -131,6 +131,12 @@ namespace _GAME.Scripts
             visual.localPosition = Vector3.zero;
         }
 
+        public void ResetPlayerVisual()
+        {
+            this.playerBB.playerVisual.DOKill();
+            this.playerBB.playerVisual.localPosition = Vector3.zero;
+        }
+
 
         public void ClearBricks()
         {

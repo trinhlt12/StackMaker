@@ -122,6 +122,12 @@ namespace _GAME.Scripts.UI
             HidePausePanel();
         }
 
+        public void OnClickRestartButton()
+        {
+            LevelManager.Instance.ReloadLevelAsync();
+            this.HidePausePanel();
+        }
+
         public void ShowPausePanel()
         {
             this.pausePanel?.SetActive(true);

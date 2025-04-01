@@ -59,6 +59,7 @@ namespace _GAME.Scripts.Level
         {
             ResetLevelData();
             await LoadLevelAsync();
+
             PlacePlayer();
         }
 
@@ -88,6 +89,9 @@ namespace _GAME.Scripts.Level
             BlockManager.Instance.TotalBrickCount = 0;
             BridgeManager.Instance.ClearAllBridgeBricks();
             BlockManager.Instance.InitializePool();
+            this.player.ClearBricks();
+            this.player.ResetPlayerVisual();
+
         }
 
         public bool HasNextLevel()
@@ -109,5 +113,6 @@ namespace _GAME.Scripts.Level
             var spawnPos     = firstGroundBlock.transform.position + Vector3.up * groundHeight;
             this.player.transform.position = spawnPos;
         }
+
     }
 }
