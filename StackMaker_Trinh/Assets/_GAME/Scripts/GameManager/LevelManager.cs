@@ -27,7 +27,7 @@ namespace _GAME.Scripts.Level
             Instance = this;
         }
 
-        private async void LoadLevel()
+        private async System.Threading.Tasks.Task LoadLevelAsync()
         {
             BlockManager.Instance.groundList.Clear();
             if (this._currentLevelInstance != null)
@@ -83,14 +83,21 @@ namespace _GAME.Scripts.Level
 
         public async void Init()
         {
-            LoadLevel();
+            Debug.Log("LevelManager.Init: Starting level loading...");
+            await LoadLevelAsync();
 
-            await System.Threading.Tasks.Task.Yield();
+            Debug.Log("LevelManager.Init: Level loaded, initializing BlockManager...");
+            if (BlockManager.Instance == null)
+            {
+                Debug.LogError("BlockManager.Instance is null after level loading!");
+                return;
+            }
 
             BlockManager.Instance.Init();
             BridgeManager.Instance.Init();
 
             BridgeManager.Instance.SortBridgeBlocks();
+            Debug.Log("LevelManager.Init: Initialization complete");
         }
 
         public void PlacePlayer()

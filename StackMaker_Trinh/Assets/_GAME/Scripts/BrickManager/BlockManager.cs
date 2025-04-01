@@ -15,7 +15,7 @@ public class BlockManager : MonoBehaviour
     public        GameObject   FirstBrick               { get; private set; }
     public        Vector3?     FirstBrickCenterPosition { get; private set; }
 
-    public GameObject FirstGroundBlock    { get; private set; }
+    public GameObject FirstGroundBlock { get; private set; }
 
     public ObjectPool brickObjectPool;
 
@@ -29,8 +29,8 @@ public class BlockManager : MonoBehaviour
             return;
         }
         Instance = this;
-
     }
+
     public void Init()
     {
         this.brickObjectPool = new ObjectPool(brickPrefab, initialPoolSize);
@@ -38,92 +38,97 @@ public class BlockManager : MonoBehaviour
     }
 
     public void SpawnBricks()
-{
-    this.TotalBrickCount = 0;
-
-    var brickList = new List<GameObject>();
-    groundList.Clear();
-
-    // Get the current level instance from LevelManager
-    var levelManager = _GAME.Scripts.Level.LevelManager.Instance;
-    var currentLevelInstance = levelManager._currentLevelInstance;
-
-    if (currentLevelInstance != null)
     {
-        // Find only ground objects that are children of the current level instance
-        foreach (Transform child in currentLevelInstance.GetComponentsInChildren<Transform>())
+        if(Instance == null)
         {
-            if (child.CompareTag("Ground"))
+            return;
+        }
+
+        this.TotalBrickCount = 0;
+
+        var brickList = new List<GameObject>();
+        groundList.Clear();
+
+        // Get the current level instance from LevelManager
+        var levelManager         = _GAME.Scripts.Level.LevelManager.Instance;
+        var currentLevelInstance = levelManager._currentLevelInstance;
+
+        if (currentLevelInstance != null)
+        {
+            // Find only ground objects that are children of the current level instance
+            foreach (Transform child in currentLevelInstance.GetComponentsInChildren<Transform>())
             {
-                groundList.Add(child.gameObject);
+                if (child.CompareTag("Ground"))
+                {
+                    groundList.Add(child.gameObject);
+                }
             }
         }
-    }
 
-    groundList.Sort((a, b) =>
-    {
-        float zA = a.transform.position.z;
-        float zB = b.transform.position.z;
-
-        if (!Mathf.Approximately(zA, zB))
+        groundList.Sort((a, b) =>
         {
-            return zA.CompareTo(zB);
+            float zA = a.transform.position.z;
+            float zB = b.transform.position.z;
+
+            if (!Mathf.Approximately(zA, zB))
+            {
+                return zA.CompareTo(zB);
+            }
+
+            float xA = a.transform.position.x;
+            float xB = b.transform.position.x;
+
+            return xA.CompareTo(xB);
+        });
+
+        if (groundList.Count > 0)
+        {
+            this.FirstGroundBlock = groundList[0];
         }
 
-        float xA = a.transform.position.x;
-        float xB = b.transform.position.x;
-
-        return xA.CompareTo(xB);
-    });
-
-    if (groundList.Count > 0)
-    {
-        this.FirstGroundBlock = groundList[0];
-    }
-
-    foreach (var ground in groundList)
-    {
-        var groundHeight = GetColliderHeight(ground);
-        var spawnPos     = ground.transform.position + Vector3.up * groundHeight;
-
-        var brick = this.brickObjectPool.Get();
-        brick.transform.position = spawnPos;
-
-        brickList.Add(brick);
-        this.TotalBrickCount++;
-    }
-
-    brickList.Sort((a, b) =>
-    {
-        float zA = a.transform.position.z;
-        float zB = b.transform.position.z;
-
-        if (!Mathf.Approximately(zA, zB))
+        foreach (var ground in groundList)
         {
-            return zA.CompareTo(zB);
+            var groundHeight = GetColliderHeight(ground);
+            var spawnPos     = ground.transform.position + Vector3.up * groundHeight;
+
+            var brick = this.brickObjectPool.Get();
+            brick.transform.position = spawnPos;
+
+            brickList.Add(brick);
+            this.TotalBrickCount++;
         }
 
-        float xA = a.transform.position.x;
-        float xB = b.transform.position.x;
+        brickList.Sort((a, b) =>
+        {
+            float zA = a.transform.position.z;
+            float zB = b.transform.position.z;
 
-        return xA.CompareTo(xB);
-    });
+            if (!Mathf.Approximately(zA, zB))
+            {
+                return zA.CompareTo(zB);
+            }
 
-    if (brickList.Count > 0)
-    {
-        var firstBrick = brickList[0];
-        this.FirstBrickPosition = firstBrick.transform.position;
+            float xA = a.transform.position.x;
+            float xB = b.transform.position.x;
 
-        this.FirstBrickCenterPosition = new Vector3(
-            Mathf.Floor(firstBrick.transform.position.x) + 0.5f,
-            firstBrick.transform.position.y,
-            Mathf.Floor(firstBrick.transform.position.z) + 0.5f
-        );
+            return xA.CompareTo(xB);
+        });
+
+        if (brickList.Count > 0)
+        {
+            var firstBrick = brickList[0];
+            this.FirstBrickPosition = firstBrick.transform.position;
+
+            this.FirstBrickCenterPosition = new Vector3(
+                Mathf.Floor(firstBrick.transform.position.x) + 0.5f,
+                firstBrick.transform.position.y,
+                Mathf.Floor(firstBrick.transform.position.z) + 0.5f
+            );
+        }
+
+        Debug.Log($"[BlockManager] Total bricks spawned: {TotalBrickCount}");
+        Debug.Log("Total ground blocks: " + groundList.Count);
     }
-
-    Debug.Log($"[BlockManager] Total bricks spawned: {TotalBrickCount}");
-    Debug.Log("Total ground blocks: " + groundList.Count);
-}
 
     public void ClearBricks()
     {
@@ -133,7 +138,6 @@ public class BlockManager : MonoBehaviour
             brickObjectPool.Return(brick);
         }
     }
-
 
     private static float GetColliderHeight(GameObject obj)
     {
