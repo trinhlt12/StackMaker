@@ -16,7 +16,7 @@ namespace _GAME.Scripts.BrickManager
         }
         public bool HasBrick()
         {
-            return _currentBrick != null;
+            return _currentBrick != null && _hasBrick;
         }
 
         public GameObject GetBrick() => _currentBrick;
@@ -30,11 +30,12 @@ namespace _GAME.Scripts.BrickManager
         public void ClearBrick()
         {
             _currentBrick = null;
+            _hasBrick     = false;
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if(this._hasBrick) return;
+            if(this.HasBrick()) return;
 
             if (other.CompareTag("Player"))
             {
