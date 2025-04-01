@@ -20,7 +20,7 @@ namespace _GAME.Scripts.GameManager
 
         private void Start()
         {
-            GraphicsSettingsManager.Instance.ApplyGraphicsSettings(GraphicsQuality.Medium);
+            GraphicsSettingsManager.Instance.ApplyGraphicsSettings(GraphicsQuality.Low);
 
             this.levelManager.PlacePlayer();
         }
@@ -38,33 +38,30 @@ namespace _GAME.Scripts.GameManager
             uiManager.ShowLoadingPanel();
 
             var progress = 0f;
-
-            yield return new WaitForSeconds(0.2f);
-            progress += 0.1f;
             uiManager.UpdateLoadingBar(progress);
 
+            // Initialize GameManager
             gameManager.Init();
-            yield return new WaitForSeconds(0.2f);
-            progress += 0.4f;
+            progress += 0.33f;
             uiManager.UpdateLoadingBar(progress);
 
+            // Initialize LevelManager
             levelManager.Init();
-            yield return new WaitForSeconds(0.2f);
-            progress += 0.8f;
+            progress += 0.33f;
             uiManager.UpdateLoadingBar(progress);
 
+            // Initialize InputManager
             inputManager.Init();
-            yield return new WaitForSeconds(0.1f);
             progress = 1f;
             uiManager.UpdateLoadingBar(progress);
 
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.1f);
 
             uiManager.HideLoadingPanel();
-            uiManager.ShowMainMenuPanel();
-            this.uiManager.ShowPlayButton();
             this.uiManager.ShowPlayButton();
 
+            GraphicsSettingsManager.Instance.ApplyGraphicsSettings(GraphicsQuality.Medium);
+            yield break;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace _GAME.Scripts.Level
             Instance = this;
         }
 
-        private void LoadLevel()
+        private async void LoadLevel()
         {
             BlockManager.Instance.groundList.Clear();
             if (this._currentLevelInstance != null)
@@ -35,8 +35,15 @@ namespace _GAME.Scripts.Level
                 Destroy(this._currentLevelInstance);
             }
 
-            string levelName = $"Level_{this.currentLevelIndex}";
-            var    prefab    = Resources.Load<GameObject>(levelName);
+            var levelName = $"Level_{this.currentLevelIndex}";
+
+            var request = Resources.LoadAsync<GameObject>(levelName);
+            while (!request.isDone)
+            {
+                await System.Threading.Tasks.Task.Yield();
+            }
+
+            var    prefab    = request.asset as GameObject;
 
             if (prefab == null) return;
             this._currentLevelInstance = Instantiate(prefab, LevelRoot);
@@ -74,10 +81,11 @@ namespace _GAME.Scripts.Level
             return this.currentLevelIndex;
         }
 
-        public void Init()
+        public async void Init()
         {
             LoadLevel();
-            this.player        = FindObjectOfType<Player>();
+
+            await System.Threading.Tasks.Task.Yield();
 
             BlockManager.Instance.Init();
             BridgeManager.Instance.Init();
