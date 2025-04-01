@@ -87,6 +87,7 @@ namespace _GAME.Scripts.Level
             BlockManager.Instance.groundList.Clear();
             BlockManager.Instance.TotalBrickCount = 0;
             BridgeManager.Instance.ClearAllBridgeBricks();
+            BlockManager.Instance.InitializePool();
         }
 
         public bool HasNextLevel()
