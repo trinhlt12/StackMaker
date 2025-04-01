@@ -1,6 +1,7 @@
 namespace _GAME.Scripts.UI
 {
     using _GAME.Scripts.GameManager;
+    using _GAME.Scripts.GameManager.Audio;
     using _GAME.Scripts.Level;
     using UnityEngine;
     using UnityEngine.UI;
@@ -126,6 +127,18 @@ namespace _GAME.Scripts.UI
         {
             LevelManager.Instance.ReloadLevelAsync();
             this.HidePausePanel();
+        }
+
+        public void OnMuteButtonClicked()
+        {
+            if(AudioManager.Instance.IsMuted)
+            {
+                AudioManager.Instance.Unmute();
+            }
+            else
+            {
+                AudioManager.Instance.Mute();
+            }
         }
 
         public void ShowPausePanel()
